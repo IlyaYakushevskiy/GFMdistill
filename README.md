@@ -1,4 +1,13 @@
-I re-wrote some of the code from PANGEA to train simple model on one dataset on my Mac witout CUDA. 
+note : for packages I still use their "pangaea-bench" environment from the original repo. 
+
+I've succeesfully customised the data pipeline and ran zero-shot inference of remoteclip on FBP dataset. 
 
 
-for packages I still use their "pangaea-bench" environment
+
+### 📜 Changelog
+
+| Date       | Description                                              |
+|------------|----------------------------------------------------------|
+| 2025-07-10 | Initial release
+|------------|----------------------------------------------------------|
+| 2025-07-19 | run inference of remoteclip with FBP dataset

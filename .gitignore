@@ -12,6 +12,7 @@ data/spacenet7
 
 pretrained_models
 
+data/*
 !data/mados
 data/mados/*
 !data/mados/splits
@@ -20,3 +21,5 @@ data/mados/splits/*
 
 .vscode
 .idea
+
+checkpoints/

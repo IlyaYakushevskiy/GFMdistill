@@ -27,7 +27,7 @@ class RawGeoFMDataset(Dataset):
         data_min: dict[str, list[str]],
         data_max: dict[str, list[str]],
         download_url: str,
-        auto_download: bool,
+        auto_download: bool
     ):
         """Initializes the dataset.
 

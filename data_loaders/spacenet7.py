@@ -22,8 +22,8 @@ import torchvision.transforms as T
 
 from abc import abstractmethod
 
-from datasets.utils import DownloadProgressBar
-from datasets.base import RawGeoFMDataset
+from data_loaders.utils import DownloadProgressBar
+from data_loaders.base import RawGeoFMDataset
 # from utils.registry import DATASET_REGISTRY
 
 # train/val/test split from https://doi.org/10.3390/rs15215135

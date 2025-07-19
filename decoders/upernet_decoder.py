@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from decoders.base import Decoder
-from decoders.ltae import LTAE2d, LTAEChannelAdaptor
+#from decoders.ltae import LTAE2d, LTAEChannelAdaptor
 from encoders.base import Encoder
 
 
@@ -282,21 +282,22 @@ class SegMTUPerNet(SegUPerNet):
 
         else:
             if self.multi_temporal_strategy == "ltae":
-                ltae_in_channels = max(decoder_in_channels)
-                # if the encoder output channels vary we must use an adaptor before the LTAE
-                if decoder_in_channels != encoder.output_dim:
-                    self.ltae_adaptor = LTAEChannelAdaptor(
-                        in_channels=encoder.output_dim,
-                        out_channels=decoder_in_channels,
-                    )
-                else:
-                    self.ltae_adaptor = lambda x: x
-                self.tmap = LTAE2d(
-                    positional_encoding=False,
-                    in_channels=ltae_in_channels,
-                    mlp=[ltae_in_channels, ltae_in_channels],
-                    d_model=ltae_in_channels,
-                )
+                print("ltae is not supported")
+                # ltae_in_channels = max(decoder_in_channels)
+                # # if the encoder output channels vary we must use an adaptor before the LTAE
+                # if decoder_in_channels != encoder.output_dim:
+                #     self.ltae_adaptor = LTAEChannelAdaptor(
+                #         in_channels=encoder.output_dim,
+                #         out_channels=decoder_in_channels,
+                #     )
+                # else:
+                #     self.ltae_adaptor = lambda x: x
+                # self.tmap = LTAE2d(
+                #     positional_encoding=False,
+                #     in_channels=ltae_in_channels,
+                #     mlp=[ltae_in_channels, ltae_in_channels],
+                #     d_model=ltae_in_channels,
+                # )
             elif self.multi_temporal_strategy == "linear":
                 self.tmap = nn.Linear(self.multi_temporal, 1)
             else:
