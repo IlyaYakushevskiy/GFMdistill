@@ -1,0 +1,35 @@
+name: GFMdistill
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - nodefaults
+dependencies:
+  - transformers
+  - pillow
+  - pip
+  - pytorch-cuda=11.8
+  - geopandas
+  - timm
+  - torchvision
+  - numpy[version='>=2.0']
+  - tqdm
+  - matplotlib
+  - rasterio
+  - ptflops
+  - python=3.10
+  - scikit-learn
+  - gdown
+  - wandb
+  - fastai::opencv-python-headless
+  - tifffile
+  - google-cloud-storage
+  - pytorch[version='>=2.1']
+  - ipykernel
+  - torchaudio
+  - jupyterlab
+  - tensorboard
+  - pip
+  - pip:
+      - open-clip-torch
+prefix: /scratch3/iyakushevsky/GFMdistill/env

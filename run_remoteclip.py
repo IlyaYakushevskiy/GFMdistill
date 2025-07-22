@@ -39,7 +39,7 @@ num_classes = 25
 batch_size = 2 #could only run with batch 2 on mac cpu
 workers = 0 #mb problems on cpu 
 
-split the data! 
+#split the data! 
 
 def main():
 

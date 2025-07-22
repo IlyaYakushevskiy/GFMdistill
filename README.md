@@ -1,4 +1,9 @@
-note : for packages I still use their "pangaea-bench" environment from the original repo. 
+ 
+##### Installing and activating the environment :
+
+`conda env create --prefix ./env --file environment.yml` 
+`conda activate /scratch3/iyakushevsky/GFMdistill/env`
+
 
 I've successfully customised the data pipeline and ran zero-shot inference of remoteclip on FBP dataset. 
 
