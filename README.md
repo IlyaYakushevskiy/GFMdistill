@@ -2,10 +2,12 @@
 ##### Installing and activating the environment :
 
 `conda env create --prefix ./env --file environment.yml` 
-`conda activate /scratch3/iyakushevsky/GFMdistill/env`
+`conda activate GFMdistill  conda env update --file environment.yaml --prune`
 
 
-I've successfully customised the data pipeline and ran zero-shot inference of remoteclip on FBP dataset. 
+Instead of bash scripts, all specifications are now in configs/*.yaml, experimetnts are run like : 
+`torchrun --nproc_per_node=1 run_pangaea.py +experiment=experiment1`
+
 
 
 

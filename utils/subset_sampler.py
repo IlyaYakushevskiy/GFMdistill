@@ -2,8 +2,8 @@ import random
 from tqdm import tqdm
 import numpy as np
 from collections import defaultdict
-from datasets.base import GeoFMDataset
-from datasets.base import GeoFMSubset
+from data_loaders.base import GeoFMDataset
+from data_loaders.base import GeoFMSubset
 
 # Calculate image-wise class distributions for segmentation
 def calculate_class_distributions(dataset: GeoFMDataset|GeoFMSubset):

@@ -29,6 +29,8 @@ dependencies:
   - torchaudio
   - jupyterlab
   - tensorboard
+  - hydra-core
+  - torchmetrics
   - pip
   - pip:
       - open-clip-torch

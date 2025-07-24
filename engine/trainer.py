@@ -87,8 +87,7 @@ class Trainer:
         self.enable_mixed_precision = precision != "fp32"
         self.precision = torch.float16 if (precision == "fp16") else torch.bfloat16
         # self.scaler = torch.GradScaler("cuda", enabled=self.enable_mixed_precision)
-        #self.scaler = torch.cuda.amp.GradScaler("cuda", enabled=self.enable_mixed_precision)
-        self.scaler = torch.amp.GradScaler(enabled=self.enable_mixed_precision)
+        self.scaler = torch.cuda.amp.GradScaler("cuda", enabled=self.enable_mixed_precision)
 
         self.start_epoch = 0
 
@@ -138,7 +137,9 @@ class Trainer:
 
             self.training_stats["data_time"].update(time.time() - end_time)
 
-            with torch.autocast("mps", enabled=self.enable_mixed_precision, dtype=self.precision):
+            with torch.autocast(
+                "cuda", enabled=self.enable_mixed_precision, dtype=self.precision
+            ):
                 logits = self.model(image, output_shape=target.shape[-2:])
                 loss = self.compute_loss(logits, target)
 
@@ -743,4 +744,3 @@ class RegTrainer(Trainer):
 
         mse = F.mse_loss(logits.squeeze(dim=1), target)  
         self.training_metrics["MSE"].update(mse.item())
-

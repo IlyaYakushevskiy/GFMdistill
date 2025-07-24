@@ -313,8 +313,8 @@ class KNNClassificationEvaluator(Evaluator):
             self.logger.info(f"Loaded {model_name} for evaluation")
 
         model.eval()
-        # if isinstance(model, torch.nn.parallel.DistributedDataParallel):
-        #     model = model.module
+        if isinstance(model, torch.nn.parallel.DistributedDataParallel):
+            model = model.module
 
         if model._bank is None or model._bank_labels is None:
             if train_loader is None:
@@ -413,11 +413,6 @@ class SegEvaluator(Evaluator):
 
     @torch.no_grad()
     def evaluate(self, model, model_name='model', model_ckpt_path=None):
-        # Force MPS device
-        if not torch.backends.mps.is_available():
-            raise RuntimeError("MPS device is not available on this machine.")
-        self.device = torch.device("mps")
-
         t = time.time()
 
         if model_ckpt_path is not None:
@@ -429,8 +424,6 @@ class SegEvaluator(Evaluator):
                 model.module.load_state_dict(model_dict)
 
             self.logger.info(f"Loaded {model_name} for evaluation")
-
-        model.to(self.device)
         model.eval()
 
         tag = f"Evaluating {model_name} on {self.split} set"
@@ -451,13 +444,11 @@ class SegEvaluator(Evaluator):
             elif self.inference_mode == "whole":
                 logits = model(image, output_shape=target.shape[-2:])
             else:
-                raise NotImplementedError(f"Inference mode {self.inference_mode} is not implemented.")
-
+                raise NotImplementedError((f"Inference mode {self.inference_mode} is not implemented."))
             if logits.shape[1] == 1:
                 pred = (torch.sigmoid(logits) > 0.5).type(torch.int64).squeeze(dim=1)
             else:
                 pred = torch.argmax(logits, dim=1)
-
             valid_mask = target != self.ignore_index
             pred, target = pred[valid_mask], target[valid_mask]
             count = torch.bincount(
@@ -465,9 +456,9 @@ class SegEvaluator(Evaluator):
             )
             confusion_matrix += count.view(self.num_classes, self.num_classes)
 
-    # Remove distributed reduction for MPS-only single process
-    # torch.distributed.all_reduce(confusion_matrix, op=torch.distributed.ReduceOp.SUM)
-
+        torch.distributed.all_reduce(
+            confusion_matrix, op=torch.distributed.ReduceOp.SUM
+        )
         metrics = self.compute_metrics(confusion_matrix.cpu())
         self.log_metrics(metrics)
 
@@ -642,7 +633,7 @@ class RegEvaluator(Evaluator):
 
             mse += F.mse_loss(logits, target)
 
-        #torch.distributed.all_reduce(mse, op=torch.distributed.ReduceOp.SUM)
+        torch.distributed.all_reduce(mse, op=torch.distributed.ReduceOp.SUM)
         mse = mse / len(self.val_loader)
 
         metrics = {"MSE": mse.item(), "RMSE": torch.sqrt(mse).item()}

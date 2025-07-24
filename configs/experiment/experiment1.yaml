@@ -1,0 +1,23 @@
+# @package _global_
+### fitting remoteclip on 1080ti
+
+defaults:
+  - _self_
+  - /dataset: fivebillionpixels
+  - /encoder: remoteclip
+  - /decoder: seg_upernet
+  - /preprocessing: seg_default
+  - /criterion: cross_entropy
+  - /task: segmentation
+  
+
+# --- Specific value overrides for this experiment ---
+batch_size: 4
+finetune: true
+
+task: 
+  trainer:
+    precision: fp16
+
+optimizer:
+  lr: 0.005

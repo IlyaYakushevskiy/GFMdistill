@@ -11,10 +11,9 @@ from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from torch.utils.data import DataLoader
-#from torch.utils.data.distributed import DistributedSampler
-from torch.utils.data import RandomSampler
+from torch.utils.data.distributed import DistributedSampler
 
-from datasets.base import GeoFMDataset, GeoFMSubset, RawGeoFMDataset
+from data_loaders.base import GeoFMDataset, GeoFMSubset, RawGeoFMDataset
 from decoders.base import Decoder
 from encoders.base import Encoder
 from engine.evaluator import Evaluator
@@ -55,12 +54,12 @@ def get_exp_info(hydra_config: HydraConf) -> dict[str, str]:
         "decoder": decoder,
         "ds": ds,
         "task": task,
-        "exp_name": f"{timestamp}_{cfg_hash}_{fm}_{decoder}_{ds}",
+        "exp_name": f"{timestamp}_{fm}_{decoder}_{ds}_{cfg_hash}",
     }
     return exp_info
 
 
-@hydra.main(version_base=None, config_path="../configs", config_name="train")
+@hydra.main(version_base=None, config_path="./configs", config_name="train")
 def main(cfg: DictConfig) -> None:
     """Geofm-bench main function.
 
@@ -69,19 +68,13 @@ def main(cfg: DictConfig) -> None:
     """
     # fix all random seeds
     fix_seed(cfg.seed)
-    rank = 0 
     # distributed training variables
-    # rank = int(os.environ["RANK"])
-    # local_rank = int(os.environ["LOCAL_RANK"])
-    if torch.backends.mps.is_available():
-        print("Using MPS for training.")
-        device = torch.device("mps")
-    else:
-        print("Using CPU , MPS unavailible for training.")
-        device = torch.device("cpu")
+    rank = cfg.rank
+    local_rank = int(cfg.local_rank)
+    device = torch.device("cuda", local_rank)
 
-    #torch.cuda.set_device(device)
-    #torch.distributed.init_process_group(backend="nccl")
+    torch.cuda.set_device(device)
+    torch.distributed.init_process_group(backend="nccl")
 
     # true if training else false
     train_run = cfg.train
@@ -89,7 +82,7 @@ def main(cfg: DictConfig) -> None:
         exp_info = get_exp_info(HydraConfig.get())
         exp_name = exp_info["exp_name"]
         task_name = exp_info["task"]
-        exp_dir = pathlib.Path(cfg.work_dir) / exp_name
+        exp_dir = pathlib.Path(cfg.work_dir) / "logs"/ exp_name
         exp_dir.mkdir(parents=True, exist_ok=True)
         logger_path = exp_dir / "train.log"
         config_log_dir = exp_dir / "configs"
@@ -126,7 +119,7 @@ def main(cfg: DictConfig) -> None:
                 resume="allow",
             )
 
-    logger = init_logger(logger_path, rank=0)
+    logger = init_logger(logger_path, rank=rank)
     logger.info("============ Initialized logger ============")
     logger.info(pprint.pformat(OmegaConf.to_container(cfg), compact=True).strip("{}"))
     logger.info("The experiment is stored in %s\n" % exp_dir)
@@ -142,27 +135,23 @@ def main(cfg: DictConfig) -> None:
         encoder=encoder,
     )
     decoder.to(device)
-    
-    # decoder = torch.nn.parallel.DistributedDataParallel(
-    #     decoder,
-    #     device_ids=[local_rank],
-    #     output_device=local_rank,
-    #     find_unused_parameters=cfg.finetune,
-    # )
-    model_name = getattr(decoder, "model_name", None)
-    if model_name is None and hasattr(decoder, "module"):
-        model_name = getattr(decoder.module, "model_name", "UnknownModel")
-
-    logger.info(
-        f"Built {model_name} with {type(encoder).__name__} encoder."
+    decoder = torch.nn.parallel.DistributedDataParallel(
+        decoder,
+        device_ids=[local_rank],
+        output_device=local_rank,
+        find_unused_parameters=cfg.finetune,
     )
-
+    logger.info(
+        "Built {} for with {} encoder.".format(
+            decoder.module.model_name, type(encoder).__name__
+        )
+    )
 
     modalities = list(encoder.input_bands.keys())
     collate_fn = get_collate_fn(modalities)
 
     # training
-    if train_run or cfg.task.trainer.model_name == "knn_probe":
+    if train_run or cfg.task.trainer.model == "knn_probe":
         # get preprocessor
         train_preprocessor = instantiate(
             cfg.preprocessing.train,
@@ -218,14 +207,13 @@ def main(cfg: DictConfig) -> None:
         )
 
         # get train val data loaders
-        train_sampler = RandomSampler if train_run else None
-
         train_loader = DataLoader(
             train_dataset,
-            sampler=train_sampler(train_dataset) if train_run else None,
+            sampler=DistributedSampler(train_dataset),
             batch_size=cfg.batch_size,
             num_workers=cfg.num_workers,
             pin_memory=True,
+            # persistent_workers=True causes memory leak
             persistent_workers=False,
             worker_init_fn=seed_worker,
             generator=get_generator(cfg.seed),
@@ -234,16 +222,16 @@ def main(cfg: DictConfig) -> None:
         )
 
         val_loader = DataLoader(
-        val_dataset,
-        sampler=train_sampler(val_dataset) if train_run else None,
-        batch_size=cfg.test_batch_size,
-        #num_workers=cfg.test_num_workers,
-        num_workers=0,
-        pin_memory=True,
-        persistent_workers=False,
-        worker_init_fn=seed_worker,
-        drop_last=False,
-        collate_fn=collate_fn,
+            val_dataset,
+            sampler=DistributedSampler(val_dataset),
+            batch_size=cfg.test_batch_size,
+            num_workers=cfg.test_num_workers,
+            pin_memory=True,
+            persistent_workers=False,
+            worker_init_fn=seed_worker,
+            # generator=g,
+            drop_last=False,
+            collate_fn=collate_fn,
         )
 
         criterion = instantiate(cfg.criterion)
@@ -289,7 +277,7 @@ def main(cfg: DictConfig) -> None:
 
     test_loader = DataLoader(
         test_dataset,
-        sampler=RandomSampler(test_dataset),
+        sampler=DistributedSampler(test_dataset),
         batch_size=cfg.test_batch_size,
         num_workers=cfg.test_num_workers,
         pin_memory=True,

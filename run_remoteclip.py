@@ -18,7 +18,7 @@ import yaml
 import encoders.pos_embed
 
 from encoders.remoteclip_encoder import RemoteCLIP_Encoder
-from decoders.upernet_decoder import SegUPerNet
+from decoders.upernet import SegUPerNet
 from  data_loaders.fbp import FiveBillionPixels
 
 from tqdm import tqdm
@@ -28,10 +28,30 @@ from torchmetrics import JaccardIndex
 import open_clip  # Used only for the image transform
 import logging # Required for the encoder's weight loading method
 
+from huggingface_hub import hf_hub_download
+import torch, open_clip
+from PIL import Image
+import  numpy as np
+
 
 #GLOBAL VARIABLES
 # images_path = "./data/FBP/Image__8bit_NirRGB/"
 # labels_path = "./data/FBP/Annotation__index/"
+
+
+#download RemoteCLIP from HF 
+
+model_name = 'ViT-B-32' # 'RN50' or 'ViT-B-32' or 'ViT-L-14'
+model, _, preprocess = open_clip.create_model_and_transforms(model_name)
+tokenizer = open_clip.get_tokenizer(model_name)
+
+path_to_your_checkpoints = './checkpoints/models--chendelong--RemoteCLIP/snapshots/bf1d8a3ccf2ddbf7c875705e46373bfe542bce38'
+
+ckpt = torch.load(f"{path_to_your_checkpoints}/RemoteCLIP-{model_name}.pt", map_location="cpu")
+message = model.load_state_dict(ckpt)
+print(message)
+
+
 config_path = "./config/remoteclip.yaml"
 ds_config_path = "./config/fivebillionpixels.yaml"
 weights_path = "./checkpoints/models--chendelong--RemoteCLIP/snapshots/bf1d8a3ccf2ddbf7c875705e46373bfe542bce38/RemoteCLIP-ViT-B-32.pt"

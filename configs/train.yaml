@@ -1,0 +1,49 @@
+train: true
+work_dir: ""
+seed: 234
+use_wandb: true
+wandb_run_id: null
+
+# TRAINING
+num_workers: 4
+batch_size: 4 #before 8 
+rank : 0
+local_rank: 0
+test_num_workers: 4
+test_batch_size: 1
+
+## EXPERIMENT
+finetune: false
+ckpt_dir: null
+limited_label_train: 1
+limited_label_val: 1
+limited_label_strategy: stratified  # Options: stratified, oversampled, random
+stratification_bins: 3 #  number of bins for stratified sampling, only for stratified
+data_replicate: 1
+use_final_ckpt: false
+dataset: null
+
+defaults:
+  # - task: null  #i preefer to define those in experiment.yaml without override
+  # - encoder: null
+  # - decoder: null
+  # - preprocessing: null
+  # - criterion: null
+  - lr_scheduler: multi_step_lr
+  - optimizer: adamw
+  - _self_ 
+
+
+
+###EXPERIMENT
+
+# ckpt_dir: null
+# limited_label_train: 1
+# limited_label_val: 1
+# limited_label_strategy: stratified  # Options: stratified, oversampled, random
+# stratification_bins: 3 #  number of bins for stratified sampling, only for stratified
+# data_replicate: 1
+# use_final_ckpt: false
+# dataset: null
+
+

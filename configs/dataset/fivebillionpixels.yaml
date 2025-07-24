@@ -1,4 +1,4 @@
-_target_: pangaea.datasets.fivebillionpixels.FiveBillionPixels
+_target_: data_loaders.fbp.FiveBillionPixels
 dataset_name: FiveBillionPixels
 root_path: ./data/FBP/
 download_url: False 
