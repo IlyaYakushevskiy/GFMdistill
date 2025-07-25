@@ -1,0 +1,21 @@
+
+train:
+  _target_: engine.data_preprocessor.Preprocessor
+  preprocessor_cfg:
+    - _target_: engine.data_preprocessor.NormalizeMeanStd
+      mean: [0.1307] #default
+      std: [0.3081]
+
+val:
+  _target_: engine.data_preprocessor.Preprocessor
+  preprocessor_cfg:
+    - _target_: engine.data_preprocessor.NormalizeMeanStd
+      mean: [0.1307]
+      std: [0.3081]
+
+test:
+  _target_: engine.data_preprocessor.Preprocessor
+  preprocessor_cfg:
+    - _target_: engine.data_preprocessor.NormalizeMeanStd
+      mean: [0.1307]
+      std: [0.3081]

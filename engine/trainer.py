@@ -86,8 +86,9 @@ class Trainer:
         ], f"Invalid precision {precision}, use 'fp32', 'fp16' or 'bfp16'."
         self.enable_mixed_precision = precision != "fp32"
         self.precision = torch.float16 if (precision == "fp16") else torch.bfloat16
-        # self.scaler = torch.GradScaler("cuda", enabled=self.enable_mixed_precision)
-        self.scaler = torch.cuda.amp.GradScaler("cuda", enabled=self.enable_mixed_precision)
+        self.scaler = torch.GradScaler("cuda", enabled=self.enable_mixed_precision)
+        #self.scaler = torch.cuda.amp.GradScaler("cuda", enabled=self.enable_mixed_precision)
+        #self.scaler = torch.amp.GradScaler("cuda", enabled=self.enable_mixed_precision)
 
         self.start_epoch = 0
 
@@ -140,7 +141,8 @@ class Trainer:
             with torch.autocast(
                 "cuda", enabled=self.enable_mixed_precision, dtype=self.precision
             ):
-                logits = self.model(image, output_shape=target.shape[-2:])
+                #logits = self.model(image, output_shape=target.shape[-2:])
+                logits = self.model(image)
                 loss = self.compute_loss(logits, target)
 
             self.optimizer.zero_grad()

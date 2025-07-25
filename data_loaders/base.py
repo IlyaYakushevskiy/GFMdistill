@@ -193,3 +193,10 @@ class GeoFMDataset(Dataset):
 
         return output
 
+    def __getattr__(self, name):
+        """
+        This method allows accessing attributes of the wrapped raw_dataset
+        directly from the GeoFMDataset object.
+        """
+        return getattr(self.raw_dataset, name)
+

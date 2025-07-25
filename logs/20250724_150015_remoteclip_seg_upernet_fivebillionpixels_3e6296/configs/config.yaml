@@ -1,0 +1,206 @@
+lr_scheduler:
+  _target_: utils.schedulers.MultiStepLR
+  optimizer: null
+  total_iters: null
+  lr_milestones:
+  - 0.6
+  - 0.9
+optimizer:
+  _target_: torch.optim.AdamW
+  params: null
+  lr: 0.005
+  betas:
+  - 0.9
+  - 0.999
+  weight_decay: 0.05
+train: true
+work_dir: ''
+seed: 234
+use_wandb: true
+wandb_run_id: q6kkffe6
+num_workers: 4
+batch_size: 1
+rank: 0
+local_rank: 0
+test_num_workers: 4
+test_batch_size: 1
+finetune: false
+ckpt_dir: null
+limited_label_train: 1
+limited_label_val: 1
+limited_label_strategy: stratified
+stratification_bins: 3
+data_replicate: 1
+use_final_ckpt: false
+dataset:
+  _target_: data_loaders.fbp.FiveBillionPixels
+  dataset_name: FiveBillionPixels
+  root_path: ./data/FBP/
+  download_url: false
+  auto_download: false
+  use_cmyk: false
+  img_size: 520
+  multi_temporal: false
+  multi_modal: false
+  ignore_index: 0
+  num_classes: 25
+  classes:
+  - unlabeled
+  - industrial area
+  - paddy field
+  - irrigated field
+  - dry cropland
+  - garden land
+  - arbor forest
+  - shrub forest
+  - park
+  - natural meadow
+  - artificial meadow
+  - river
+  - urban residential
+  - lake
+  - pond
+  - fish pond
+  - snow
+  - bareland
+  - rural residential
+  - stadium
+  - square
+  - road
+  - overpass
+  - railway station
+  - airport
+  distribution:
+  - 0.0
+  - 0.0368
+  - 0.0253
+  - 0.3567
+  - 0.0752
+  - 0.0095
+  - 0.0694
+  - 0.0096
+  - 0.0004
+  - 0.0055
+  - 0.0025
+  - 0.0568
+  - 0.0548
+  - 0.1396
+  - 0.0102
+  - 0.0129
+  - 0.0004
+  - 0.0456
+  - 0.0447
+  - 0.0003
+  - 0.0002
+  - 0.0383
+  - 0.0025
+  - 0.0007
+  - 0.0011
+  bands:
+    optical:
+    - B4
+    - B3
+    - B2
+  data_mean:
+    optical:
+    - 92.6
+    - 124.3
+    - 94.2
+    - 98.0
+  data_std:
+    optical:
+    - 44.5
+    - 51.0
+    - 50.0
+    - 47.1
+  data_min:
+    optical:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+  data_max:
+    optical:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+dataset.img_size: 256
+task.trainer.precision: fp16
+encoder:
+  _target_: encoders.remoteclip_encoder.RemoteCLIP_Encoder
+  encoder_weights: ./pretrained_models/RemoteCLIP-ViT-B-32.pt
+  download_url: https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt
+  embed_dim: 768
+  input_size: 224
+  layers: 12
+  width: 768
+  head_width: 64
+  patch_size: 32
+  mlp_ratio: 4.0
+  input_bands:
+    optical:
+    - B4
+    - B3
+    - B2
+  output_layers:
+  - 3
+  - 5
+  - 7
+  - 11
+  output_dim: 768
+decoder:
+  _target_: decoders.upernet.SegUPerNet
+  channels: 512
+  encoder: null
+  num_classes: ${dataset.num_classes}
+  finetune: ${finetune}
+preprocessing:
+  train:
+    _target_: engine.data_preprocessor.Preprocessor
+    preprocessor_cfg:
+    - _target_: engine.data_preprocessor.RandomCropToEncoder
+    - _target_: engine.data_preprocessor.BandFilter
+    - _target_: engine.data_preprocessor.NormalizeMeanStd
+    - _target_: engine.data_preprocessor.BandPadding
+  val:
+    _target_: engine.data_preprocessor.Preprocessor
+    preprocessor_cfg:
+    - _target_: engine.data_preprocessor.BandFilter
+    - _target_: engine.data_preprocessor.NormalizeMeanStd
+    - _target_: engine.data_preprocessor.BandPadding
+  test:
+    _target_: engine.data_preprocessor.Preprocessor
+    preprocessor_cfg:
+    - _target_: engine.data_preprocessor.BandFilter
+    - _target_: engine.data_preprocessor.NormalizeMeanStd
+    - _target_: engine.data_preprocessor.BandPadding
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+  ignore_index: ${dataset.ignore_index}
+task:
+  trainer:
+    _target_: engine.trainer.SegTrainer
+    model: null
+    train_loader: null
+    optimizer: null
+    lr_scheduler: null
+    evaluator: null
+    exp_dir: null
+    device: null
+    criterion: null
+    n_epochs: 80
+    precision: fp16
+    ckpt_interval: 20
+    eval_interval: 5
+    log_interval: 5
+    best_metric_key: mIoU
+    use_wandb: ${use_wandb}
+  evaluator:
+    _target_: engine.evaluator.SegEvaluator
+    val_loader: null
+    exp_dir: null
+    device: null
+    use_wandb: ${use_wandb}
+    inference_mode: sliding
+    sliding_inference_batch: 2

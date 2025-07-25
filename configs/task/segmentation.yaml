@@ -12,7 +12,7 @@ trainer:
 
   # params to adapt
   n_epochs: 80
-  precision: fp32
+  precision: fp16
   ckpt_interval: 20
   eval_interval: 5
   log_interval: 5
@@ -27,5 +27,5 @@ evaluator:
   device: null
   use_wandb: ${use_wandb}
   inference_mode: sliding
-  sliding_inference_batch: 8
+  sliding_inference_batch: 2
 

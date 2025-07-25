@@ -1,0 +1,9 @@
+_target_: encoders.cnn_teacher.SimpleCNNEncoder
+#encoder_weights: none
+#download_url: https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt
+
+input_bands:
+  optical: ['grayscale']
+
+output_layers: [1, 2]
+input_size: 28

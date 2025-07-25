@@ -1,0 +1,24 @@
+# @package _global_
+### evaluating remoteclip on 1080ti
+
+defaults:
+  - _self_
+  - /dataset: fivebillionpixels
+  - /encoder: remoteclip
+  - /decoder: cnn_teacher
+  - /preprocessing: seg_default
+  - /criterion: cross_entropy
+  - /task: segmentation
+  
+
+# --- Specific value overrides for this experiment ---
+train: true 
+finetune: false
+batch_size: 1
+test_batch_size: 1
+
+dataset.img_size: 256
+
+task.trainer.precision: fp16 #reduce 
+optimizer:
+  lr: 0.005

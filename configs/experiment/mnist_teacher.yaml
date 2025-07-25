@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - /dataset: mnist
+  - /encoder: cnn_teacher
+  - /decoder: cnn_teacher
+  - /preprocessing: mnist_preprocessor
+  - /criterion: cross_entropy
+  - /task: linear_classification
+  
+
+# --- Specific value overrides for this experiment ---
+train: true 
+finetune: false
+batch_size: 64
+tetst_batch_size: 64
+n_epochs: 5
+
+

@@ -1,0 +1,50 @@
+_target_: data_loaders.mnist.MNIST
+dataset_name: mnist
+root: ./data/mnist
+
+download_url: True
+num_classes: 10
+ignore_index: -100
+img_size: 28
+bands:
+  optical: ['grayscale']
+
+classes:
+  - '0'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+
+
+distribution:
+  - 0.0983
+  - 0.0982
+  - 0.0982
+  - 0.0982
+  - 0.0982
+  - 0.0982
+  - 0.0982
+  - 0.0982
+  - 0.0982
+  - 0.0982
+
+
+
+data_mean:
+  optical: [0.1307]
+data_std:
+  optical: [0.3081]
+data_min:
+  optical: [0.0]
+data_max:
+  optical: [1.0]
+
+multi_modal: False
+use_cmyk: False
+multi_temporal: False

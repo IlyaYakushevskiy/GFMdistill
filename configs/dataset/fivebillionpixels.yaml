@@ -5,7 +5,7 @@ download_url: False
 auto_download: False
 use_cmyk: False
 
-img_size: 520
+img_size: 256 # 520 in paper, 256 for faster training
 multi_temporal: False
 multi_modal: False
 
@@ -67,7 +67,7 @@ distribution:
 
 bands:
   optical:
-    - B8
+   # - B8 drop for now (og paper does it ) 
     - B4
     - B3
     - B2

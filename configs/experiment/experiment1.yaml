@@ -5,14 +5,14 @@ defaults:
   - _self_
   - /dataset: fivebillionpixels
   - /encoder: remoteclip
-  - /decoder: seg_upernet
+  - /decoder: seg_unet
   - /preprocessing: seg_default
   - /criterion: cross_entropy
   - /task: segmentation
   
 
 # --- Specific value overrides for this experiment ---
-batch_size: 4
+batch_size: 2
 finetune: true
 
 task: 

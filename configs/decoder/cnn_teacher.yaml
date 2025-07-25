@@ -1,0 +1,6 @@
+_target_: decoders.mnist_decoder.ClassificationDecoder
+
+in_channels: 64
+feature_map_size: 7
+num_classes: ${dataset.num_classes}
+finetune: false

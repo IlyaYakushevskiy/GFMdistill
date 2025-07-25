@@ -382,7 +382,7 @@ class RemoteCLIP_Encoder(Encoder):
         self.width = width
 
         self.conv1 = nn.Conv2d(
-            in_channels=4,
+            in_channels=3,
             out_channels=width,
             kernel_size=patch_size,
             stride=patch_size,

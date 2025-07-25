@@ -1,6 +1,6 @@
 _target_: decoders.upernet.SegUPerNet
 
-channels: 512
+channels: 256 #512
 encoder: null
 num_classes: ${dataset.num_classes}
 finetune: ${finetune}
