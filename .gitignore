@@ -25,4 +25,5 @@ data/mados/splits/*
 checkpoints/
 scratch3/
 
-logs/
+logs
+output

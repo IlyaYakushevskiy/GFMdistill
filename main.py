@@ -106,8 +106,8 @@ def main(cfg: DictConfig) -> None:
         exp_name = exp_dir.name
         logger_path = exp_dir / "test.log"
         # load training config
-        cfg_path = exp_dir / "configs" / "config.yaml"
-        cfg = OmegaConf.load(cfg_path)
+        #cfg_path = exp_dir / "configs" / "config.yaml" ####always evaluate with new config 
+        #cfg = OmegaConf.load(cfg_path)
         if cfg.task.trainer.use_wandb and rank == 0:
             import wandb
 

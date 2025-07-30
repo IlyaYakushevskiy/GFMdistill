@@ -18,6 +18,7 @@ class SimpleCNNEncoder(Encoder):
         output_layers: List[int] = [1, 2],
         num_blocks : int = 2,
         base_channels: int = 32,
+        #save_feature_maps: bool = False,
         **kwargs
     ):
         """
@@ -43,12 +44,13 @@ class SimpleCNNEncoder(Encoder):
             multi_temporal=False,
             multi_temporal_output=False,
             pyramid_output=True,  # return features from multiple scales
-            download_url=None,
+            download_url=None
         )
 
         # ---- Define Network Architecture ----
 
         self.blocks = nn.ModuleList()
+        #self.save_feature_maps = save_feature_maps
         in_channels = 1
 
         for i in range(1, num_blocks + 1):
@@ -100,6 +102,12 @@ class SimpleCNNEncoder(Encoder):
             x = block(x)
             if i in self.output_layers:
                 outputs.append(x)
+
+        # if self.save_feature_maps == True:
+        #     # Apply Global Average Pooling to the last feature map
+        #     print("SAVING THE MAPS")
+            # x = self.gap(x)
+            # outputs.append(x)
         #print(f"Feature maps from layers {self.output_layers}: {[o.shape for o in outputs]}")
         return outputs #shape (1,512 for 4 layers )
     

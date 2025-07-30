@@ -10,20 +10,28 @@ defaults:
   - _self_
   
 
-# --- Specific value overrides for this experiment ---
+finetune: false
+batch_size: 16
+test_batch_size: 16
+n_epochs: 5
+train: false
+work_dir: ""
+seed: 234
+use_wandb: false
+use_final_ckpt: true
+ckpt_dir: logs/20250730_183744_cnn_teacher_cnn_teacher_mnist_cc15c4
+
 encoder:
   num_blocks: 3 #override encoder 
   output_layers: [1, 2, 3] #override encoder 
   base_channels: 64 #override encoder (amount of convolutional filters)
 
+
 decoder: 
   feature_map_size: 1
-train: true 
-finetune: false
-batch_size: 8
-test_batch_size: 8
-task: 
-  trainer:
-    n_epochs: 3
 
-
+task:
+  evaluator:
+    _target_: engine.evaluator.LinearClassificationEvaluator
+    save_feature_maps: true 
+    save_path: "output/my_run_features"

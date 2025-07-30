@@ -63,4 +63,4 @@ class ClassificationDecoder(Decoder):
         final_features = features_list[-1]
         logits = self.classifier(final_features)
         
-        return logits
+        return logits, features_list

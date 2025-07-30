@@ -148,10 +148,14 @@ class LinearClassificationEvaluator(Evaluator):
         use_wandb: bool = False,
         multi_label: bool = False,   # Flag to indicate multi-label evaluation
         topk: int = 1,               # For multi-label: if > 1, use top-k selection
+        save_feature_maps: bool = False, 
+        save_path: str = "feature_maps", 
     ) -> None:
         super().__init__(val_loader, exp_dir, device, inference_mode, sliding_inference_batch, use_wandb)
         self.multi_label = multi_label
         self.topk = topk
+        self.save_feature_maps = save_feature_maps 
+        self.save_path = save_path  
         
     def evaluate(
         self, 
@@ -183,8 +187,23 @@ class LinearClassificationEvaluator(Evaluator):
             target = target.to(self.device)
             
             with torch.no_grad():
-                logits = model(image)
+                logits, feature_maps = model(image)
+
             
+
+            if self.save_feature_maps:
+                save_dir = Path(self.save_path)
+                save_dir.mkdir(parents=True, exist_ok=True)
+                
+                output_layers = model.module.encoder.output_layers
+                
+                for i, feature_map_tensor in enumerate(feature_maps):
+                    layer_num = output_layers[i]
+                    # Create a UNIQUE filename using the batch index
+                    file_path = save_dir / f"batch_{batch_idx}_layer_{layer_num}_features.pt"
+                    torch.save(feature_map_tensor.detach().cpu(), file_path)
+
+
             if self.multi_label:
                 # Multi-label evaluation:
                 # Option 1: If topk > 1, select top-k indices; otherwise, threshold at 0.5.

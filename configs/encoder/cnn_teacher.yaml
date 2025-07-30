@@ -6,6 +6,7 @@ input_bands:
   optical: ['grayscale']
 
 
+save_feature_maps: false 
 output_layers: [1, 2]
 input_size: 28
 num_blocks : 2
