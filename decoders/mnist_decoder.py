@@ -1,5 +1,3 @@
-# In a new file, e.g., decoders/mnist_decoder.py
-
 import torch
 import torch.nn as nn
 from typing import Dict
@@ -9,16 +7,14 @@ from encoders.base import Encoder
 
 class ClassificationDecoder(Decoder):
     """
-    A self-contained classification model for MNIST that follows the
-    framework's expected pattern (takes an encoder in __init__).
+    A self-contained classification model that automatically adapts to the encoder's output.
     """
     def __init__(
         self,
         encoder: Encoder,
         num_classes: int,
         finetune: bool,
-        in_channels: int,
-        feature_map_size: int,
+        # REMOVED: in_channels and feature_map_size are no longer needed here
         **kwargs
     ):
         super().__init__(encoder=encoder, num_classes=num_classes, finetune=finetune)
@@ -31,10 +27,21 @@ class ClassificationDecoder(Decoder):
             for param in self.encoder.parameters():
                 param.requires_grad = False
         
-        # Calculate the input features for the linear layer
-        in_features = in_channels * (feature_map_size**2)
+        # === Step 1: Dynamically determine the encoder's output feature size ===
+        # Create a dummy input tensor matching the encoder's expected input size
+        dummy_input = torch.randn(1, 1, self.encoder.input_size, self.encoder.input_size)
+        
+        # Perform a dummy forward pass through the encoder to get the output shape
+        with torch.no_grad():
+            dummy_features_list = self.encoder({'optical': dummy_input})
+        
+        # Get the final feature map and calculate its flattened size
+        final_feature_map = dummy_features_list[-1]
+        in_features = final_feature_map.view(1, -1).size(1) # e.g., converts [1, 512, 1, 1] to 512
 
-        # Define the simple classifier head
+        print(f"Decoder dynamically initialized with in_features = {in_features}")
+        
+        # === Step 2: Define the classifier head with the correct input size ===
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Dropout(p=0.5),
@@ -42,9 +49,7 @@ class ClassificationDecoder(Decoder):
         )
 
     def forward(self, img: Dict[str, torch.Tensor]) -> torch.Tensor:
-        # The framework provides a 4D tensor (B, C, T, H, W).
-        # Our non-temporal encoder needs a 3D tensor (B, C, H, W).
-        # We remove the dummy time dimension (T=1).
+        # Remove the dummy time dimension (T=1)
         img_no_time = {k: v.squeeze(2) for k, v in img.items()}
 
         # Get features from the encoder

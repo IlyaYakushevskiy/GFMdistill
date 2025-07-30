@@ -4,6 +4,7 @@ import pathlib
 import pprint
 import time
 
+from fvcore.nn import FlopCountAnalysis
 import hydra
 import torch
 from hydra.conf import HydraConf
@@ -146,6 +147,47 @@ def main(cfg: DictConfig) -> None:
             decoder.module.model_name, type(encoder).__name__
         )
     )
+
+    if rank == 0:
+        # Calculate complexity on the underlying model, not the DDP wrapper
+        model_to_analyze = decoder.module
+
+        # --- Calculate Trainable Parameters ---
+        params_in_M = sum(p.numel() for p in model_to_analyze.parameters() if p.requires_grad) / 1e6
+        logger.info(f"Model Trainable Parameters: {params_in_M:.3f}M")
+
+        # --- Calculate GMACs ---
+        # Create a dummy input tensor that matches the model's forward pass signature.
+        # The decoder expects a 5D tensor (B, C, T, H, W) in a dictionary.
+        try:
+            # Assuming a single modality for simplicity in this example.
+            # You might need to adjust this if your model takes multiple modalities.
+            modality_key = list(encoder.input_bands.keys())[0]
+            num_input_channels = len(encoder.input_bands[modality_key])
+            
+            dummy_tensor = torch.randn(
+                1,  # Batch size
+                num_input_channels,
+                1,  # Time dimension
+                cfg.dataset.img_size,
+                cfg.dataset.img_size,
+            ).to(device)
+            
+            dummy_input = {modality_key: dummy_tensor}
+            
+            flop_analyzer = FlopCountAnalysis(model_to_analyze, dummy_input)
+            gmacs = flop_analyzer.total() / 1e9
+            logger.info(f"Model GMACs: {gmacs:.3f} (for input size {dummy_tensor.shape})")
+
+        except Exception as e:
+            gmacs = -1 # Assign a sentinel value if calculation fails
+            logger.warning(f"Could not calculate GMACs due to an error: {e}")
+
+        # --- Log to W&B ---
+        if cfg.task.trainer.use_wandb:
+            import wandb
+            wandb.summary["parameters_M"] = params_in_M
+            wandb.summary["gmacs"] = gmacs
 
     modalities = list(encoder.input_bands.keys())
     collate_fn = get_collate_fn(modalities)

@@ -1,23 +1,17 @@
 # @package _global_
 
+###reduce num layers /2 and change loss
 defaults:
+  - _self_
   - /dataset: mnist
   - /encoder: cnn_teacher
   - /decoder: cnn_teacher
   - /preprocessing: mnist_preprocessor
   - /criterion: cross_entropy
   - /task: linear_classification
-  - _self_
   
 
 # --- Specific value overrides for this experiment ---
-encoder:
-  num_blocks: 4 #override encoder 
-  output_layers: [1, 2, 3, 4] #override encoder 
-  base_channels: 64 #override encoder (amount of convolutional filters)
-
-decoder: 
-  feature_map_size: 1
 train: true 
 finetune: false
 batch_size: 64
