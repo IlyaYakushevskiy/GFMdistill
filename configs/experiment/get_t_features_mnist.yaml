@@ -34,4 +34,4 @@ task:
   evaluator:
     _target_: engine.evaluator.LinearClassificationEvaluator
     save_feature_maps: true 
-    save_path: "output/my_run_features"
+    save_path: "outputs/my_run_features"

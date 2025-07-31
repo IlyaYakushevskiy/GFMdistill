@@ -106,13 +106,13 @@ class FiveBillionPixels(RawGeoFMDataset):
 
         ##Assumes splitted data
         self._image_dir = sorted(
-            #glob(os.path.join(self.root_path, self.split, "Image__8bit_NirRGB", "*.tif"))
-            glob(os.path.join(self.root_path, "Image__8bit_NirRGB", "*.tif"))
+            glob(os.path.join(self.root_path, self.split, "Image__8bit_NirRGB", "*.tif"))
+            #glob(os.path.join(self.root_path, "Image__8bit_NirRGB", "*.tif"))
             )       
         print("Loading images from:", os.path.join(self.root_path, "Image__8bit_NirRGB", "*.tif"))
         self._label_dir = sorted(
-            #glob(os.path.join(self.root_path, self.split, "Annotation__index", "*.png"))
-            glob(os.path.join(self.root_path, "Annotation__index", "*.png"))
+            glob(os.path.join(self.root_path, self.split, "Annotation__index", "*.png"))
+            #glob(os.path.join(self.root_path, "Annotation__index", "*.png"))
         )
 
     def __len__(self):

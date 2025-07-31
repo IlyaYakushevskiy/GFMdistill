@@ -825,8 +825,8 @@ class PPM(nn.ModuleList):
             upsampled_ppm_out = F.interpolate(
                 ppm_out,
                 size=x.size()[2:],
-                mode="bilinear",
-                align_corners=self.align_corners,
+                mode="nearest"
+                #align_corners=self.align_corners,
             )
             ppm_outs.append(upsampled_ppm_out)
         return ppm_outs

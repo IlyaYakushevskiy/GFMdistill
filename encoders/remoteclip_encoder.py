@@ -463,6 +463,18 @@ class RemoteCLIP_Encoder(Encoder):
 
     def forward(self, image):
         x = image["optical"].squeeze(2)
+
+        #reshaping input 
+        expected_size = (self.input_size, self.input_size)
+        if x.shape[-2:] != expected_size:
+            x = F.interpolate(
+                x,
+                size=expected_size,
+                mode='bilinear',
+                align_corners=False
+            )
+
+
         x = self.conv1(x)  # shape = [*, width, grid, grid]
         x = x.reshape(x.shape[0], x.shape[1], -1)  # shape = [*, width, grid ** 2]
         x = x.permute(0, 2, 1)  # shape = [*, grid ** 2, width]

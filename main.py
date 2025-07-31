@@ -193,6 +193,9 @@ def main(cfg: DictConfig) -> None:
     collate_fn = get_collate_fn(modalities)
 
     # training
+
+    torch.cuda.empty_cache() ### clear cache before training
+
     if train_run or cfg.task.trainer.model == "knn_probe":
         # get preprocessor
         train_preprocessor = instantiate(

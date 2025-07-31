@@ -1,0 +1,29 @@
+# @package _global_
+
+#TODO ,gotta think how to separate decoder 
+defaults:
+  - /dataset: mnist
+  - /encoder: cnn_teacher
+  - /decoder: cnn_teacher
+  - /preprocessing: mnist_preprocessor
+  - /criterion: cross_entropy
+  - /task: linear_classification
+  - _self_
+  
+
+encoder:
+  num_blocks: 3 #override encoder 
+  output_layers: [1, 2] #override encoder 
+  base_channels: 64 #override encoder (amount of convolutional filters)
+
+decoder: 
+  feature_map_size: 1
+train: true 
+finetune: false
+batch_size: 8
+test_batch_size: 8
+task: 
+  trainer:
+    n_epochs: 3
+
+

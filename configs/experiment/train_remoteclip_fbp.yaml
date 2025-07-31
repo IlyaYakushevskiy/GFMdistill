@@ -1,0 +1,33 @@
+# @package _global_
+### triaing remoteclip on FBP with 1080ti
+
+defaults:
+  - /dataset: fivebillionpixels
+  - /encoder: remoteclip
+  - /decoder: seg_upernet #for unet must train encoder
+  - /preprocessing: seg_default
+  - /criterion: cross_entropy
+  - /task: segmentation
+  - _self_
+  
+
+train: true
+finetune: false
+batch_size: 1
+test_batch_size: 1
+
+dataset: 
+  img_size: 256
+
+encoder: 
+  encoder_weights: ./pretrained_models/RemoteCLIP-RN50.pt
+  download_url: https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-RN50.pt
+
+task.trainer.precision: fp16 #reduce 
+
+task:
+  evaluator:
+    inference_mode: 'whole' #instead of sliding, should use cropped images
+
+optimizer:
+  lr: 0.005

@@ -1,6 +1,6 @@
 _target_: data_loaders.fbp.FiveBillionPixels
 dataset_name: FiveBillionPixels
-root_path: ./data/FBP/
+root_path: ./data/FBP01/
 download_url: False 
 auto_download: False
 use_cmyk: False

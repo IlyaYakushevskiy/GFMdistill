@@ -27,8 +27,7 @@ class ClassificationDecoder(Decoder):
             for param in self.encoder.parameters():
                 param.requires_grad = False
         
-        # === Step 1: Dynamically determine the encoder's output feature size ===
-        # Create a dummy input tensor matching the encoder's expected input size
+        
         dummy_input = torch.randn(1, 1, self.encoder.input_size, self.encoder.input_size)
         
         # Perform a dummy forward pass through the encoder to get the output shape
