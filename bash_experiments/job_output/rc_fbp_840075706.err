@@ -1,0 +1,331 @@
+
+Modules based on Lua: Version 8.7.24  2023-05-04 15:12 -05:00
+    by Robert McLay mclay@tacc.utexas.edu
+
+module [options] sub-command [args ...]
+
+Help sub-commands:
+------------------
+  help                              prints this message
+  help                module [...]  print help message from module(s)
+
+Loading/Unloading sub-commands:
+-------------------------------
+  load | add          module [...]  load module(s)
+  try-load | try-add  module [...]  Add module(s), do not complain if not
+                                    found
+  del | unload        module [...]  Remove module(s), do not complain if not
+                                    found
+  swap | sw | switch  m1 m2         unload m1 and load m2
+  purge                             unload all modules
+  refresh                           reload aliases from current list of
+                                    modules.
+  update                            reload all currently loaded modules.
+
+Listing / Searching sub-commands:
+---------------------------------
+  list                              List loaded modules
+  list                s1 s2 ...     List loaded modules that match the
+                                    pattern
+  avail | av                        List available modules
+  avail | av          string        List available modules that contain
+                                    "string".
+  category | cat                    List all categories
+  category | cat      s1 s2 ...     List all categories that match the
+                                    pattern and display their modules
+  overview | ov                     List all available modules by short
+                                    names with number of versions
+  overview | ov       string        List available modules by short names
+                                    with number of versions that contain
+                                    "string"
+  spider                            List all possible modules
+  spider              module        List all possible version of that module
+                                    file
+  spider              string        List all module that contain the
+                                    "string".
+  spider              name/version  Detailed information about that version
+                                    of the module.
+  whatis              module        Print whatis information about module
+  keyword | key       string        Search all name and whatis that contain
+                                    "string".
+
+Searching with Lmod:
+--------------------
+  All searching (spider, list, avail, keyword) support regular expressions:
+  
+
+  -r spider           '^p'          Finds all the modules that start with
+                                    `p' or `P'
+  -r spider           mpi           Finds all modules that have "mpi" in
+                                    their name.
+  -r spider           'mpi$         Finds all modules that end with "mpi" in
+                                    their name.
+
+Handling a collection of modules:
+--------------------------------
+  save | s                          Save the current list of modules to a
+                                    user defined "default" collection.
+  save | s            name          Save the current list of modules to
+                                    "name" collection.
+  reset                             The same as "restore system"
+  restore | r                       Restore modules from the user's
+                                    "default" or system default.
+  restore | r         name          Restore modules from "name" collection.
+  restore             system        Restore module state to system defaults.
+  savelist                          List of saved collections.
+  describe | mcc      name          Describe the contents of a module
+                                    collection.
+  disable             name          Disable (i.e. remove) a collection.
+
+Deprecated commands:
+--------------------
+  getdefault          [name]        load name collection of modules or
+                                    user's "default" if no name given.
+                                    ===> Use "restore" instead <====
+  setdefault          [name]        Save current list of modules to name if
+                                    given, otherwise save as the default
+                                    list for you the user.
+                                    ===> Use "save" instead. <====
+
+Miscellaneous sub-commands:
+---------------------------
+  is-loaded           modulefile    return a true status if module is loaded
+  is-avail            modulefile    return a true status if module can be
+                                    loaded
+  show                modulefile    show the commands in the module file.
+  use [-a]            path          Prepend or Append path to MODULEPATH.
+  unuse               path          remove path from MODULEPATH.
+  tablelist                         output list of active modules as a lua
+                                    table.
+
+Important Environment Variables:
+--------------------------------
+  LMOD_COLORIZE                     If defined to be "YES" then Lmod prints
+                                    properties and warning in color.
+
+    --------------------------------------------------------------------------
+
+Lmod Web Sites
+
+  Documentation:    https://lmod.readthedocs.org
+  GitHub:           https://github.com/TACC/Lmod
+  SourceForge:      https://lmod.sf.net
+  TACC Homepage:    https://www.tacc.utexas.edu/research-development/tacc-projects/lmod
+
+  To report a bug please read https://lmod.readthedocs.io/en/latest/075_bug_reporting.html
+    --------------------------------------------------------------------------
+
+
+wandb: Currently logged in as: ilyay to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20250813_174045-1css61a7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 20250813_174044_remoteclip_seg_upernet_fivebillionpixels_f5ae41
+wandb: ⭐️ View project at https://wandb.ai/ilyay/geofm-bench
+wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/1css61a7
+INFO - 08/13/25 17:40:46 - 0:00:00 - ============ Initialized logger ============
+INFO - 08/13/25 17:40:46 - 0:00:00 - 'batch_size': 4,
+                                      'ckpt_dir': None,
+                                      'criterion': {'_target_': 'torch.nn.CrossEntropyLoss',
+                                                    'ignore_index': '${dataset.ignore_index}'},
+                                      'data_replicate': 1,
+                                      'dataset': {'_target_': 'data_loaders.fbp.FiveBillionPixels',
+                                                  'auto_download': False,
+                                                  'bands': {'optical': ['B4', 'B3', 'B2']},
+                                                  'classes': ['unlabeled', 'industrial area', 'paddy field',
+                                                              'irrigated field', 'dry cropland', 'garden land',
+                                                              'arbor forest', 'shrub forest', 'park',
+                                                              'natural meadow', 'artificial meadow', 'river',
+                                                              'urban residential', 'lake', 'pond', 'fish pond',
+                                                              'snow', 'bareland', 'rural residential', 'stadium',
+                                                              'square', 'road', 'overpass', 'railway station',
+                                                              'airport'],
+                                                  'data_max': {'optical': [0.0, 0.0, 0.0, 0.0]},
+                                                  'data_mean': {'optical': [124.3, 94.2, 98.0]},
+                                                  'data_min': {'optical': [0.0, 0.0, 0.0, 0.0]},
+                                                  'data_std': {'optical': [51.0, 50.0, 47.1]},
+                                                  'dataset_name': 'FiveBillionPixels',
+                                                  'distribution': [0.0, 0.0368, 0.0253, 0.3567, 0.0752, 0.0095,
+                                                                   0.0694, 0.0096, 0.0004, 0.0055, 0.0025, 0.0568,
+                                                                   0.0548, 0.1396, 0.0102, 0.0129, 0.0004, 0.0456,
+                                                                   0.0447, 0.0003, 0.0002, 0.0383, 0.0025, 0.0007,
+                                                                   0.0011],
+                                                  'download_url': False,
+                                                  'ignore_index': 0,
+                                                  'img_size': 224,
+                                                  'multi_modal': False,
+                                                  'multi_temporal': False,
+                                                  'num_classes': 25,
+                                                  'root_path': '/cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/',
+                                                  'use_cmyk': False},
+                                      'decoder': {'_target_': 'decoders.upernet.SegUPerNet',
+                                                  'channels': 256,
+                                                  'encoder': None,
+                                                  'finetune': '${finetune}',
+                                                  'num_classes': '${dataset.num_classes}'},
+                                      'encoder': {'_target_': 'encoders.remoteclip_encoder.RemoteCLIP_Encoder',
+                                                  'download_url': 'https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt',
+                                                  'embed_dim': 768,
+                                                  'encoder_weights': './pretrained_models/RemoteCLIP-ViT-B-32.pt',
+                                                  'head_width': 64,
+                                                  'input_bands': {'optical': ['B4', 'B3', 'B2']},
+                                                  'input_size': 224,
+                                                  'layers': 12,
+                                                  'mlp_ratio': 4.0,
+                                                  'output_dim': 768,
+                                                  'output_layers': [3, 5, 7, 11],
+                                                  'patch_size': 32,
+                                                  'width': 768},
+                                      'finetune': False,
+                                      'limited_label_strategy': 'stratified',
+                                      'limited_label_train': 1,
+                                      'limited_label_val': 1,
+                                      'local_rank': 0,
+                                      'lr_scheduler': {'_target_': 'utils.schedulers.MultiStepLR',
+                                                       'lr_milestones': [0.6, 0.9],
+                                                       'optimizer': None,
+                                                       'total_iters': None},
+                                      'num_workers': 4,
+                                      'optimizer': {'_target_': 'torch.optim.AdamW',
+                                                    'betas': [0.9, 0.999],
+                                                    'lr': 7e-05,
+                                                    'params': None,
+                                                    'weight_decay': 0.05},
+                                      'preprocessing': {'test': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                 'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                      {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                      {'_target_': 'engine.data_preprocessor.BandPadding'}]},
+                                                        'train': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                  'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.RandomCropToEncoder'},
+                                                                                       {'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                       {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                       {'_target_': 'engine.data_preprocessor.BandPadding'}]},
+                                                        'val': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                     {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                     {'_target_': 'engine.data_preprocessor.BandPadding'}]}},
+                                      'rank': 0,
+                                      'seed': 234,
+                                      'stratification_bins': 3,
+                                      'task': {'evaluator': {'_target_': 'engine.evaluator.SegEvaluator',
+                                                             'device': None,
+                                                             'exp_dir': None,
+                                                             'inference_mode': 'sliding',
+                                                             'sliding_inference_batch': 2,
+                                                             'use_wandb': '${use_wandb}',
+                                                             'val_loader': None},
+                                               'trainer': {'_target_': 'engine.trainer.SegTrainer',
+                                                           'best_metric_key': 'mIoU',
+                                                           'ckpt_interval': 20,
+                                                           'criterion': None,
+                                                           'device': None,
+                                                           'eval_interval': 5,
+                                                           'evaluator': None,
+                                                           'exp_dir': None,
+                                                           'log_interval': 5,
+                                                           'lr_scheduler': None,
+                                                           'model': None,
+                                                           'n_epochs': 80,
+                                                           'optimizer': None,
+                                                           'precision': 'fp16',
+                                                           'train_loader': None,
+                                                           'use_wandb': '${use_wandb}'}},
+                                      'test_batch_size': 4,
+                                      'test_num_workers': 4,
+                                      'train': True,
+                                      'use_final_ckpt': False,
+                                      'use_wandb': True,
+                                      'wandb_run_id': '1css61a7',
+                                      'work_dir': ''
+INFO - 08/13/25 17:40:46 - 0:00:00 - The experiment is stored in logs/20250813_174044_remoteclip_seg_upernet_fivebillionpixels_f5ae41
+                                     
+INFO - 08/13/25 17:40:46 - 0:00:00 - Device used: cuda:0
+INFO - 08/13/25 17:40:54 - 0:00:08 - Built remoteclip_encoder.
+INFO - 08/13/25 17:40:56 - 0:00:09 - Built UPerNet for with RemoteCLIP_Encoder encoder.
+INFO - 08/13/25 17:40:56 - 0:00:09 - Model Trainable Parameters: 16.731M
+WARNING - 08/13/25 17:40:56 - 0:00:10 - Could not calculate GMACs due to an error: Expected more than 1 value per channel when training, got input size torch.Size([1, 256, 1, 1])
+INFO - 08/13/25 17:40:57 - 0:00:11 - Built FiveBillionPixels dataset.
+INFO - 08/13/25 17:40:57 - 0:00:11 - Total number of train patches: 135
+                                     Total number of validation patches: 15
+                                     
+Evaluating epoch 0 on val set:   0%|          | 0/4 [00:00<?, ?it/s]Evaluating epoch 0 on val set:   0%|          | 0/4 [01:09<?, ?it/s]
+Error executing job with overrides: ['+experiment=train_remoteclip_fbp_BS8']
+Traceback (most recent call last):
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/main.py", line 308, in main
+    trainer.train()
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/trainer.py", line 106, in train
+    metrics, used_time = self.evaluator(self.model, f"epoch {epoch}")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/evaluator.py", line 493, in __call__
+    return self.evaluate(model, model_name, model_ckpt_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/evaluator.py", line 464, in evaluate
+    logits = self.sliding_inference(model, image, input_size, output_shape=target.shape[-2:],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/evaluator.py", line 121, in sliding_inference
+    pred_ = model.forward(img_, output_shape=(input_size, input_size))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1648, in forward
+    else self._run_ddp_forward(*inputs, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1474, in _run_ddp_forward
+    return self.module(*inputs, **kwargs)  # type: ignore[index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
+    return inner()
+           ^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1827, in inner
+    result = forward_call(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/decoders/upernet.py", line 245, in forward
+    output = F.interpolate(output, size=output_shape, mode="bilinear")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/functional.py", line 4774, in interpolate
+    return torch._C._nn.upsample_bilinear2d(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 23.46 GiB of which 15.94 MiB is free. Including non-PyTorch memory, this process has 23.40 GiB memory in use. Of the allocated memory 22.24 GiB is allocated by PyTorch, and 527.38 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[rank0]:[W813 17:42:09.359841611 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+E0813 17:42:15.128000 3649714 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 3649716) of binary: /cluster/home/iyakushevsky/euler_env/bin/python3
+Traceback (most recent call last):
+  File "/cluster/home/iyakushevsky/euler_env/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 277, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+main.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-08-13_17:42:15
+  host      : eu-g3-071.euler.ethz.ch
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3649716)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

@@ -70,12 +70,21 @@ def main(cfg: DictConfig) -> None:
     # fix all random seeds
     fix_seed(cfg.seed)
     # distributed training variables
-    rank = cfg.rank
-    local_rank = int(cfg.local_rank)
+    # rank = cfg.rank
+    # local_rank = int(cfg.local_rank)
+
+
+    # device = torch.device("cuda", local_rank)
+
+    local_rank = int(os.environ["LOCAL_RANK"])
+    rank = int(os.environ["RANK"])
+    torch.distributed.init_process_group(backend="nccl")
+    torch.cuda.set_device(local_rank)
     device = torch.device("cuda", local_rank)
 
-    torch.cuda.set_device(device)
-    torch.distributed.init_process_group(backend="nccl")
+
+    # torch.cuda.set_device(device)
+    # torch.distributed.init_process_group(backend="nccl")
 
     # true if training else false
     train_run = cfg.train

@@ -1,0 +1,28 @@
+=== Job starting on eu-g3-076 at Wed Aug 13 16:51:28 CEST 2025 ===
+Activated Python venv: /cluster/home/iyakushevsky/euler_env/bin/python
+Wed Aug 13 16:51:28 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.172.08             Driver Version: 570.172.08     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA TITAN RTX               On  |   00000000:C1:00.0 Off |                  N/A |
+| 41%   37C    P8             19W /  280W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+CUDA available: True
+Torch version: 2.8.0+cu128
+CUDA version in Torch: 12.8
+GPU Name: NVIDIA TITAN RTX
+Loading images from: /cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP01/Image__8bit_NirRGB/*.tif
+Loading images from: /cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP01/Image__8bit_NirRGB/*.tif

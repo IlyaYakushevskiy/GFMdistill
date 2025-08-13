@@ -7,8 +7,8 @@ wandb_run_id: null
 # TRAINING
 num_workers: 4
 batch_size: 4 #before 8 
-rank : 0
-local_rank: 0
+# rank : 0
+# local_rank: 0 get from ENV automatically 
 test_num_workers: 4
 test_batch_size: 1
 

@@ -49,6 +49,8 @@ class Evaluator:
             exp_dir: str | Path,
             device: torch.device,
             inference_mode: str = 'sliding',
+
+            
             sliding_inference_batch: int = None,
             use_wandb: bool = False,
     ) -> None:
@@ -156,7 +158,8 @@ class LinearClassificationEvaluator(Evaluator):
         self.topk = topk
         self.save_feature_maps = save_feature_maps 
         self.save_path = save_path  
-        
+    
+    @torch.no_grad()
     def evaluate(
         self, 
         model: torch.nn.Module, 
@@ -489,6 +492,7 @@ class SegEvaluator(Evaluator):
     def __call__(self, model, model_name, model_ckpt_path=None):
         return self.evaluate(model, model_name, model_ckpt_path)
 
+    @torch.no_grad()
     def compute_metrics(self, confusion_matrix):
         # Calculate IoU for each class
         intersection = torch.diag(confusion_matrix)
