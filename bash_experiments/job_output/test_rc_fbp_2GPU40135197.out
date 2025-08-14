@@ -1,6 +1,6 @@
-=== Job starting on eu-lo-g3-050 at Wed Aug 13 17:29:23 CEST 2025 ===
+=== Job starting on eu-g3-066 at Thu Aug 14 12:02:01 CEST 2025 ===
 Activated Python venv: /cluster/home/iyakushevsky/euler_env/bin/python
-Wed Aug 13 17:29:25 2025       
+Thu Aug 14 12:02:01 2025       
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 570.172.08             Driver Version: 570.172.08     CUDA Version: 12.8     |
 |-----------------------------------------+------------------------+----------------------+
@@ -8,8 +8,12 @@ Wed Aug 13 17:29:25 2025
 | Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
-|   0  Quadro RTX 6000                On  |   00000000:C1:00.0 Off |                  Off |
-| 33%   30C    P8              5W /  260W |       1MiB /  24576MiB |      0%      Default |
+|   0  Quadro RTX 6000                On  |   00000000:21:00.0 Off |                  Off |
+| 34%   29C    P8             14W /  260W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  Quadro RTX 6000                On  |   00000000:22:00.0 Off |                  Off |
+| 34%   31C    P8             16W /  260W |       1MiB /  24576MiB |      0%      Default |
 |                                         |                        |                  N/A |
 +-----------------------------------------+------------------------+----------------------+
                                                                                          
@@ -26,7 +30,6 @@ CUDA version in Torch: 12.8
 GPU Name: Quadro RTX 6000
 Loading images from: /cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/Image__8bit_NirRGB/*.tif
 Loading images from: /cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/Image__8bit_NirRGB/*.tif
-[1;34mwandb[0m: 
-[1;34mwandb[0m: 🚀 View run [33m20250813_173054_remoteclip_seg_upernet_fivebillionpixels_6fe54f[0m at: [34mhttps://wandb.ai/ilyay/geofm-bench/runs/9w4s9epb[0m
-[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250813_173054-9w4s9epb/logs[0m
-=== Job finished at Wed Aug 13 17:31:59 CEST 2025 ===
+Loading images from: /cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/Image__8bit_NirRGB/*.tif
+Loading images from: /cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/Image__8bit_NirRGB/*.tif
+=== Job finished at Thu Aug 14 12:02:45 CEST 2025 ===

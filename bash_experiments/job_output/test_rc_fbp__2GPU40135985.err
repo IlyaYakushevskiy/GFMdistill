@@ -118,14 +118,14 @@ Lmod Web Sites
 
 wandb: Currently logged in as: ilyay to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
 wandb: Tracking run with wandb version 0.21.1
-wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20250813_181935-l6qc9xkg
+wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20250814_121126-dzib5wqv
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run 20250813_181935_remoteclip_seg_upernet_fivebillionpixels_30d0a4
+wandb: Syncing run (best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35
 wandb: ⭐️ View project at https://wandb.ai/ilyay/geofm-bench
-wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/l6qc9xkg
-INFO - 08/13/25 18:19:38 - 0:00:00 - ============ Initialized logger ============
-INFO - 08/13/25 18:19:38 - 0:00:00 - 'batch_size': 4,
-                                      'ckpt_dir': None,
+wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/dzib5wqv
+INFO - 08/14/25 12:11:28 - 0:00:00 - ============ Initialized logger ============
+INFO - 08/14/25 12:11:28 - 0:00:00 - 'batch_size': 8,
+                                      'ckpt_dir': 'logs/(best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35',
                                       'criterion': {'_target_': 'torch.nn.CrossEntropyLoss',
                                                     'ignore_index': '${dataset.ignore_index}'},
                                       'data_replicate': 1,
@@ -152,7 +152,7 @@ INFO - 08/13/25 18:19:38 - 0:00:00 - 'batch_size': 4,
                                                                    0.0011],
                                                   'download_url': False,
                                                   'ignore_index': 0,
-                                                  'img_size': 224,
+                                                  'img_size': 520,
                                                   'multi_modal': False,
                                                   'multi_temporal': False,
                                                   'num_classes': 25,
@@ -187,7 +187,7 @@ INFO - 08/13/25 18:19:38 - 0:00:00 - 'batch_size': 4,
                                       'num_workers': 4,
                                       'optimizer': {'_target_': 'torch.optim.AdamW',
                                                     'betas': [0.9, 0.999],
-                                                    'lr': 0.00014,
+                                                    'lr': 0.0001,
                                                     'params': None,
                                                     'weight_decay': 0.05},
                                       'preprocessing': {'test': {'_target_': 'engine.data_preprocessor.Preprocessor',
@@ -230,145 +230,341 @@ INFO - 08/13/25 18:19:38 - 0:00:00 - 'batch_size': 4,
                                                            'use_wandb': '${use_wandb}'}},
                                       'test_batch_size': 1,
                                       'test_num_workers': 4,
-                                      'train': True,
+                                      'train': False,
                                       'use_final_ckpt': False,
                                       'use_wandb': True,
-                                      'wandb_run_id': 'l6qc9xkg',
+                                      'wandb_run_id': None,
                                       'work_dir': ''
-INFO - 08/13/25 18:19:38 - 0:00:00 - The experiment is stored in logs/20250813_181935_remoteclip_seg_upernet_fivebillionpixels_30d0a4
+INFO - 08/14/25 12:11:28 - 0:00:00 - The experiment is stored in logs/(best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35
                                      
-INFO - 08/13/25 18:19:38 - 0:00:00 - Device used: cuda:0
-INFO - 08/13/25 18:19:41 - 0:00:03 - Built remoteclip_encoder.
-INFO - 08/13/25 18:19:41 - 0:00:03 - Built UPerNet for with RemoteCLIP_Encoder encoder.
-INFO - 08/13/25 18:19:41 - 0:00:03 - Model Trainable Parameters: 16.731M
-Evaluating epoch 0 on val set:   0%|          | 0/8 [00:00<?, ?it/s]WARNING - 08/13/25 18:19:41 - 0:00:03 - Could not calculate GMACs due to an error: Tried to trace <__torch__.torch.classes.c10d.ProcessGroup object at 0x26259c90> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced.
-INFO - 08/13/25 18:19:42 - 0:00:03 - Built FiveBillionPixels dataset.
-INFO - 08/13/25 18:19:42 - 0:00:03 - Total number of train patches: 135
-                                     Total number of validation patches: 15
+INFO - 08/14/25 12:11:28 - 0:00:00 - Device used: cuda:0
+INFO - 08/14/25 12:11:29 - 0:00:01 - Built remoteclip_encoder.
+INFO - 08/14/25 12:11:29 - 0:00:01 - Built UPerNet for with RemoteCLIP_Encoder encoder.
+INFO - 08/14/25 12:11:29 - 0:00:01 - Model Trainable Parameters: 16.731M
+WARNING - 08/14/25 12:11:29 - 0:00:01 - Could not calculate GMACs due to an error: Tried to trace <__torch__.torch.classes.c10d.ProcessGroup object at 0x353b5790> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced.
+Evaluating checkpoint__best on test set:   0%|          | 0/1 [00:00<?, ?it/s]INFO - 08/14/25 12:11:30 - 0:00:02 - Loaded checkpoint__best for evaluation
+Evaluating checkpoint__best on test set:   0%|          | 0/1 [00:00<?, ?it/s]INFO - 08/14/25 12:11:39 - 0:00:11 - Generating prediction mask and saving to checkpoint__best_mask.png
+Evaluating checkpoint__best on test set: 100%|██████████| 1/1 [00:09<00:00,  9.59s/it]Evaluating checkpoint__best on test set: 100%|██████████| 1/1 [00:09<00:00,  9.63s/it]
+INFO - 08/14/25 12:11:46 - 0:00:18 - Prediction mask saved to output_masks/checkpoint__best_mask.png
+Evaluating checkpoint__best on test set: 100%|██████████| 1/1 [00:16<00:00, 16.13s/it]Evaluating checkpoint__best on test set: 100%|██████████| 1/1 [00:16<00:00, 16.16s/it]
+INFO - 08/14/25 12:11:46 - 0:00:18 - [test] ------- IoU --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 22.509
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	  0.000
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  9.968
+                                     urban residential	  3.162
+                                     lake             	  5.790
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.000
+                                     rural residential	  5.863
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [test]-------------------
+                                     [test] Mean      	  1.970
+INFO - 08/14/25 12:11:46 - 0:00:18 - [test] ------- F1-score --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 36.747
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	  0.000
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 18.129
+                                     urban residential	  6.130
+                                     lake             	 10.945
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.000
+                                     rural residential	 11.077
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [test]-------------------
+                                     [test] Mean      	  3.460
+INFO - 08/14/25 12:11:46 - 0:00:18 - [test] ------- Precision --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 23.926
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	  0.000
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 11.177
+                                     urban residential	 26.942
+                                     lake             	 34.062
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.000
+                                     rural residential	 58.252
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [test]-------------------
+                                     [test] Mean      	  6.432
+INFO - 08/14/25 12:11:46 - 0:00:18 - [test] ------- Recall --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 79.170
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	  0.000
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 47.946
+                                     urban residential	  3.458
+                                     lake             	  6.520
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.000
+                                     rural residential	  6.121
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [test]-------------------
+                                     [test] Mean      	  5.967
+INFO - 08/14/25 12:11:46 - 0:00:18 - Mean Accuracy: 20.324 
                                      
-Evaluating epoch 0 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 0 on val set:  12%|█▎        | 1/8 [00:10<01:16, 10.95s/it]Evaluating epoch 0 on val set:  12%|█▎        | 1/8 [00:16<01:54, 16.30s/it]Evaluating epoch 0 on val set:  25%|██▌       | 2/8 [00:16<00:40,  6.79s/it]Evaluating epoch 0 on val set:  38%|███▊      | 3/8 [00:16<00:18,  3.75s/it]Evaluating epoch 0 on val set:  50%|█████     | 4/8 [00:16<00:09,  2.32s/it]Evaluating epoch 0 on val set:  25%|██▌       | 2/8 [00:16<00:46,  7.79s/it]Evaluating epoch 0 on val set:  38%|███▊      | 3/8 [00:16<00:21,  4.30s/it]Evaluating epoch 0 on val set:  50%|█████     | 4/8 [00:16<00:10,  2.66s/it]Evaluating epoch 0 on val set:  62%|██████▎   | 5/8 [00:18<00:06,  2.17s/it]Evaluating epoch 0 on val set:  62%|██████▎   | 5/8 [00:18<00:06,  2.19s/it]Evaluating epoch 0 on val set:  75%|███████▌  | 6/8 [00:18<00:03,  1.55s/it]Evaluating epoch 0 on val set:  88%|████████▊ | 7/8 [00:19<00:01,  1.09s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:19<00:00,  1.28it/s]Evaluating epoch 0 on val set:  75%|███████▌  | 6/8 [00:19<00:03,  1.75s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:19<00:00,  2.41s/it]
-Evaluating epoch 0 on val set:  88%|████████▊ | 7/8 [00:19<00:01,  1.23s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:19<00:00,  1.14it/s]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:19<00:00,  2.42s/it]
-INFO - 08/13/25 18:20:01 - 0:00:23 - [val] ------- IoU --------
-                                     industrial area  	  0.000
-                                     paddy field      	  6.304
-                                     irrigated field  	  0.000
-                                     dry cropland     	  0.000
-                                     garden land      	  1.079
-                                     arbor forest     	  2.933
-                                     shrub forest     	  0.050
-                                     park             	  0.004
-                                     natural meadow   	  0.000
-                                     artificial meadow	  0.000
-                                     river            	  0.000
-                                     urban residential	  0.261
-                                     lake             	  0.000
-                                     pond             	  0.000
-                                     fish pond        	  0.000
-                                     snow             	  0.000
-                                     bareland         	  0.367
-                                     rural residential	  0.323
-                                     stadium          	  0.000
-                                     square           	  0.000
-                                     road             	  0.000
-                                     overpass         	  0.000
-                                     railway station  	  0.000
-                                     airport          	  0.000
-                                     [val]-------------------
-                                     [val] Mean       	  0.472
-INFO - 08/13/25 18:20:01 - 0:00:23 - [val] ------- F1-score --------
-                                     industrial area  	  0.000
-                                     paddy field      	 11.860
-                                     irrigated field  	  0.000
-                                     dry cropland     	  0.000
-                                     garden land      	  2.136
-                                     arbor forest     	  5.698
-                                     shrub forest     	  0.101
-                                     park             	  0.007
-                                     natural meadow   	  0.000
-                                     artificial meadow	  0.000
-                                     river            	  0.000
-                                     urban residential	  0.520
-                                     lake             	  0.000
-                                     pond             	  0.000
-                                     fish pond        	  0.000
-                                     snow             	  0.000
-                                     bareland         	  0.732
-                                     rural residential	  0.643
-                                     stadium          	  0.000
-                                     square           	  0.000
-                                     road             	  0.000
-                                     overpass         	  0.000
-                                     railway station  	  0.000
-                                     airport          	  0.000
-                                     [val]-------------------
-                                     [val] Mean       	  0.904
-INFO - 08/13/25 18:20:01 - 0:00:23 - [val] ------- Precision --------
-                                     industrial area  	  0.000
-                                     paddy field      	 51.236
-                                     irrigated field  	  0.000
-                                     dry cropland     	  0.000
-                                     garden land      	  1.970
-                                     arbor forest     	  3.850
-                                     shrub forest     	  0.082
-                                     park             	  0.726
-                                     natural meadow   	  0.000
-                                     artificial meadow	  0.000
-                                     river            	  0.000
-                                     urban residential	  0.284
-                                     lake             	  0.000
-                                     pond             	  0.000
-                                     fish pond        	  0.000
-                                     snow             	  0.000
-                                     bareland         	 16.442
-                                     rural residential	  0.336
-                                     stadium          	  0.000
-                                     square           	  0.000
-                                     road             	  0.000
-                                     overpass         	  0.000
-                                     railway station  	  0.000
-                                     airport          	  0.000
-                                     [val]-------------------
-                                     [val] Mean       	  3.122
-INFO - 08/13/25 18:20:01 - 0:00:23 - [val] ------- Recall --------
-                                     industrial area  	  0.000
-                                     paddy field      	  6.706
-                                     irrigated field  	  0.000
-                                     dry cropland     	  0.000
-                                     garden land      	  2.331
-                                     arbor forest     	 10.962
-                                     shrub forest     	  0.132
-                                     park             	  0.004
-                                     natural meadow   	  0.000
-                                     artificial meadow	  0.000
-                                     river            	  0.000
-                                     urban residential	  3.144
-                                     lake             	  0.000
-                                     pond             	  0.000
-                                     fish pond        	  0.000
-                                     snow             	  0.000
-                                     bareland         	  0.374
-                                     rural residential	  7.400
-                                     stadium          	  0.000
-                                     square           	  0.000
-                                     road             	  0.000
-                                     overpass         	  0.000
-                                     railway station  	  0.000
-                                     airport          	  0.000
-                                     [val]-------------------
-                                     [val] Mean       	  1.294
-INFO - 08/13/25 18:20:01 - 0:00:23 - Mean Accuracy: 4.695 
-                                     
-/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
-  warnings.warn(  # warn only once
-INFO - 08/13/25 18:20:01 - 0:00:23 - Epoch 0 | Training checkpoint saved at logs/20250813_181935_remoteclip_seg_upernet_fivebillionpixels_30d0a4/checkpoint__best.pth
-/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
-  warnings.warn(  # warn only once
-INFO - 08/13/25 18:20:01 - 0:00:23 - ============ Starting epoch 0 ... ============
-wandb: WARNING Tried to log to step 0 that is less than the current step 1. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
-INFO - 08/13/25 18:20:57 - 0:01:19 - Epoch [0-5/17]	ETA [02h51m26s|00h01m28s]	Time [7.363|10.769]	Loss 2.8674 (2.5536)	lr 1.400e-04
-                                      Training metrics: Acc  47.687 ( 45.179)	mAcc  15.805 ( 23.568)	mIoU   5.402 (  5.688)
-INFO - 08/13/25 18:21:25 - 0:01:47 - Epoch [0-10/17]	ETA [03h35m00s|00h01m05s]	Time [9.326|8.051]	Loss 2.9643 (2.4533)	lr 1.400e-04
-                                      Training metrics: Acc  10.264 ( 42.283)	mAcc   7.633 ( 25.442)	mIoU   2.759 (  8.400)
-INFO - 08/13/25 18:21:54 - 0:02:16 - Epoch [0-15/17]	ETA [03h05m02s|00h00m16s]	Time [8.024|7.188]	Loss 2.8516 (2.3511)	lr 1.400e-04
-                                      Training metrics: Acc  14.570 ( 42.258)	mAcc  20.346 ( 25.443)	mIoU   4.427 (  9.012)
-INFO - 08/13/25 18:22:23 - 0:02:45 - ============ Starting epoch 1 ... ============
+wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                  test_F1_airport ▁
+wandb:             test_F1_arbor forest ▁
+wandb:        test_F1_artificial meadow ▁
+wandb:                 test_F1_bareland ▁
+wandb:             test_F1_dry cropland ▁
+wandb:                test_F1_fish pond ▁
+wandb:              test_F1_garden land ▁
+wandb:          test_F1_industrial area ▁
+wandb:          test_F1_irrigated field ▁
+wandb:                     test_F1_lake ▁
+wandb:           test_F1_natural meadow ▁
+wandb:                 test_F1_overpass ▁
+wandb:              test_F1_paddy field ▁
+wandb:                     test_F1_park ▁
+wandb:                     test_F1_pond ▁
+wandb:          test_F1_railway station ▁
+wandb:                    test_F1_river ▁
+wandb:                     test_F1_road ▁
+wandb:        test_F1_rural residential ▁
+wandb:             test_F1_shrub forest ▁
+wandb:                     test_F1_snow ▁
+wandb:                   test_F1_square ▁
+wandb:                  test_F1_stadium ▁
+wandb:        test_F1_urban residential ▁
+wandb:                 test_IoU_airport ▁
+wandb:            test_IoU_arbor forest ▁
+wandb:       test_IoU_artificial meadow ▁
+wandb:                test_IoU_bareland ▁
+wandb:            test_IoU_dry cropland ▁
+wandb:               test_IoU_fish pond ▁
+wandb:             test_IoU_garden land ▁
+wandb:         test_IoU_industrial area ▁
+wandb:         test_IoU_irrigated field ▁
+wandb:                    test_IoU_lake ▁
+wandb:          test_IoU_natural meadow ▁
+wandb:                test_IoU_overpass ▁
+wandb:             test_IoU_paddy field ▁
+wandb:                    test_IoU_park ▁
+wandb:                    test_IoU_pond ▁
+wandb:         test_IoU_railway station ▁
+wandb:                   test_IoU_river ▁
+wandb:                    test_IoU_road ▁
+wandb:       test_IoU_rural residential ▁
+wandb:            test_IoU_shrub forest ▁
+wandb:                    test_IoU_snow ▁
+wandb:                  test_IoU_square ▁
+wandb:                 test_IoU_stadium ▁
+wandb:       test_IoU_urban residential ▁
+wandb:           test_Precision_airport ▁
+wandb:      test_Precision_arbor forest ▁
+wandb: test_Precision_artificial meadow ▁
+wandb:          test_Precision_bareland ▁
+wandb:      test_Precision_dry cropland ▁
+wandb:         test_Precision_fish pond ▁
+wandb:       test_Precision_garden land ▁
+wandb:   test_Precision_industrial area ▁
+wandb:   test_Precision_irrigated field ▁
+wandb:              test_Precision_lake ▁
+wandb:    test_Precision_natural meadow ▁
+wandb:          test_Precision_overpass ▁
+wandb:       test_Precision_paddy field ▁
+wandb:              test_Precision_park ▁
+wandb:              test_Precision_pond ▁
+wandb:   test_Precision_railway station ▁
+wandb:             test_Precision_river ▁
+wandb:              test_Precision_road ▁
+wandb: test_Precision_rural residential ▁
+wandb:      test_Precision_shrub forest ▁
+wandb:              test_Precision_snow ▁
+wandb:            test_Precision_square ▁
+wandb:           test_Precision_stadium ▁
+wandb: test_Precision_urban residential ▁
+wandb:              test_Recall_airport ▁
+wandb:         test_Recall_arbor forest ▁
+wandb:    test_Recall_artificial meadow ▁
+wandb:             test_Recall_bareland ▁
+wandb:         test_Recall_dry cropland ▁
+wandb:            test_Recall_fish pond ▁
+wandb:          test_Recall_garden land ▁
+wandb:      test_Recall_industrial area ▁
+wandb:      test_Recall_irrigated field ▁
+wandb:                 test_Recall_lake ▁
+wandb:       test_Recall_natural meadow ▁
+wandb:             test_Recall_overpass ▁
+wandb:          test_Recall_paddy field ▁
+wandb:                 test_Recall_park ▁
+wandb:                 test_Recall_pond ▁
+wandb:      test_Recall_railway station ▁
+wandb:                test_Recall_river ▁
+wandb:                 test_Recall_road ▁
+wandb:    test_Recall_rural residential ▁
+wandb:         test_Recall_shrub forest ▁
+wandb:                 test_Recall_snow ▁
+wandb:               test_Recall_square ▁
+wandb:              test_Recall_stadium ▁
+wandb:    test_Recall_urban residential ▁
+wandb:                        test_mAcc ▁
+wandb:                         test_mF1 ▁
+wandb:                        test_mIoU ▁
+wandb: 
+wandb: Run summary:
+wandb:                            gmacs -1
+wandb:                     parameters_M 16.73116
+wandb:                  test_F1_airport 0
+wandb:             test_F1_arbor forest 0
+wandb:        test_F1_artificial meadow 0
+wandb:                 test_F1_bareland 0
+wandb:             test_F1_dry cropland 0
+wandb:                test_F1_fish pond 0
+wandb:              test_F1_garden land 0
+wandb:          test_F1_industrial area 0
+wandb:          test_F1_irrigated field 36.74717
+wandb:                     test_F1_lake 10.94536
+wandb:           test_F1_natural meadow 0
+wandb:                 test_F1_overpass 0
+wandb:              test_F1_paddy field 0
+wandb:                     test_F1_park 0
+wandb:                     test_F1_pond 0
+wandb:          test_F1_railway station 0
+wandb:                    test_F1_river 18.12862
+wandb:                     test_F1_road 0
+wandb:        test_F1_rural residential 11.07722
+wandb:             test_F1_shrub forest 0
+wandb:                     test_F1_snow 0
+wandb:                   test_F1_square 0
+wandb:                  test_F1_stadium 0
+wandb:        test_F1_urban residential 6.12968
+wandb:                 test_IoU_airport 0
+wandb:            test_IoU_arbor forest 0
+wandb:       test_IoU_artificial meadow 0
+wandb:                test_IoU_bareland 0
+wandb:            test_IoU_dry cropland 0
+wandb:               test_IoU_fish pond 0
+wandb:             test_IoU_garden land 0
+wandb:         test_IoU_industrial area 0
+wandb:         test_IoU_irrigated field 22.50936
+wandb:                    test_IoU_lake 5.78952
+wandb:          test_IoU_natural meadow 0
+wandb:                test_IoU_overpass 0
+wandb:             test_IoU_paddy field 0
+wandb:                    test_IoU_park 0
+wandb:                    test_IoU_pond 0
+wandb:         test_IoU_railway station 0
+wandb:                   test_IoU_river 9.96782
+wandb:                    test_IoU_road 0
+wandb:       test_IoU_rural residential 5.86336
+wandb:            test_IoU_shrub forest 0
+wandb:                    test_IoU_snow 0
+wandb:                  test_IoU_square 0
+wandb:                 test_IoU_stadium 0
+wandb:       test_IoU_urban residential 3.16174
+wandb:           test_Precision_airport 0
+wandb:      test_Precision_arbor forest 0
+wandb: test_Precision_artificial meadow 0
+wandb:          test_Precision_bareland 0
+wandb:      test_Precision_dry cropland 0
+wandb:         test_Precision_fish pond 0
+wandb:       test_Precision_garden land 0
+wandb:   test_Precision_industrial area 0
+wandb:   test_Precision_irrigated field 23.92639
+wandb:              test_Precision_lake 34.06227
+wandb:    test_Precision_natural meadow 0
+wandb:          test_Precision_overpass 0
+wandb:       test_Precision_paddy field 0
+wandb:              test_Precision_park 0
+wandb:              test_Precision_pond 0
+wandb:   test_Precision_railway station 0
+wandb:             test_Precision_river 11.1774
+wandb:              test_Precision_road 0
+wandb: test_Precision_rural residential 58.25229
+wandb:      test_Precision_shrub forest 0
+wandb:              test_Precision_snow 0
+wandb:            test_Precision_square 0
+wandb:           test_Precision_stadium 0
+wandb: test_Precision_urban residential 26.94207
+wandb:              test_Recall_airport 0
+wandb:         test_Recall_arbor forest 0
+wandb:    test_Recall_artificial meadow 0
+wandb:             test_Recall_bareland 0
+wandb:         test_Recall_dry cropland 0
+wandb:            test_Recall_fish pond 0
+wandb:          test_Recall_garden land 0
+wandb:      test_Recall_industrial area 0
+wandb:      test_Recall_irrigated field 79.16962
+wandb:                 test_Recall_lake 6.52027
+wandb:       test_Recall_natural meadow 0
+wandb:             test_Recall_overpass 0
+wandb:          test_Recall_paddy field 0
+wandb:                 test_Recall_park 0
+wandb:                 test_Recall_pond 0
+wandb:      test_Recall_railway station 0
+wandb:                test_Recall_river 47.9465
+wandb:                 test_Recall_road 0
+wandb:    test_Recall_rural residential 6.12055
+wandb:         test_Recall_shrub forest 0
+wandb:                 test_Recall_snow 0
+wandb:               test_Recall_square 0
+wandb:              test_Recall_stadium 0
+wandb:    test_Recall_urban residential 3.45824
+wandb:                        test_mAcc 20.32409
+wandb:                         test_mF1 3.4595
+wandb:                        test_mIoU 1.97049
+wandb: 
+wandb: 🚀 View run (best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35 at: https://wandb.ai/ilyay/geofm-bench/runs/dzib5wqv
+wandb: ⭐️ View project at: https://wandb.ai/ilyay/geofm-bench
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20250814_121126-dzib5wqv/logs
+[rank0]:[W814 12:11:48.597576766 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())

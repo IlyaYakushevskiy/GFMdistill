@@ -118,14 +118,14 @@ Lmod Web Sites
 
 wandb: Currently logged in as: ilyay to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
 wandb: Tracking run with wandb version 0.21.1
-wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20250813_173444-sejvhj1t
+wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20250814_120236-clx8s20f
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run 20250813_173444_remoteclip_seg_upernet_fivebillionpixels_02b492
+wandb: Syncing run 20250814_120236_remoteclip_seg_upernet_fivebillionpixels_82bed2
 wandb: ⭐️ View project at https://wandb.ai/ilyay/geofm-bench
-wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/sejvhj1t
-INFO - 08/13/25 17:34:45 - 0:00:00 - ============ Initialized logger ============
-INFO - 08/13/25 17:34:45 - 0:00:00 - 'batch_size': 8,
-                                      'ckpt_dir': None,
+wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/clx8s20f
+INFO - 08/14/25 12:02:38 - 0:00:00 - ============ Initialized logger ============
+INFO - 08/14/25 12:02:38 - 0:00:00 - 'batch_size': 8,
+                                      'ckpt_dir': 'logs/(best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35',
                                       'criterion': {'_target_': 'torch.nn.CrossEntropyLoss',
                                                     'ignore_index': '${dataset.ignore_index}'},
                                       'data_replicate': 1,
@@ -152,7 +152,7 @@ INFO - 08/13/25 17:34:45 - 0:00:00 - 'batch_size': 8,
                                                                    0.0011],
                                                   'download_url': False,
                                                   'ignore_index': 0,
-                                                  'img_size': 224,
+                                                  'img_size': 520,
                                                   'multi_modal': False,
                                                   'multi_temporal': False,
                                                   'num_classes': 25,
@@ -180,15 +180,14 @@ INFO - 08/13/25 17:34:45 - 0:00:00 - 'batch_size': 8,
                                       'limited_label_strategy': 'stratified',
                                       'limited_label_train': 1,
                                       'limited_label_val': 1,
-                                      'local_rank': 0,
                                       'lr_scheduler': {'_target_': 'utils.schedulers.MultiStepLR',
                                                        'lr_milestones': [0.6, 0.9],
                                                        'optimizer': None,
                                                        'total_iters': None},
-                                      'num_workers': 1,
+                                      'num_workers': 4,
                                       'optimizer': {'_target_': 'torch.optim.AdamW',
                                                     'betas': [0.9, 0.999],
-                                                    'lr': 7e-05,
+                                                    'lr': 0.0001,
                                                     'params': None,
                                                     'weight_decay': 0.05},
                                       'preprocessing': {'test': {'_target_': 'engine.data_preprocessor.Preprocessor',
@@ -204,13 +203,12 @@ INFO - 08/13/25 17:34:45 - 0:00:00 - 'batch_size': 8,
                                                                 'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
                                                                                      {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
                                                                                      {'_target_': 'engine.data_preprocessor.BandPadding'}]}},
-                                      'rank': 0,
                                       'seed': 234,
                                       'stratification_bins': 3,
                                       'task': {'evaluator': {'_target_': 'engine.evaluator.SegEvaluator',
                                                              'device': None,
                                                              'exp_dir': None,
-                                                             'inference_mode': 'sliding',
+                                                             'inference_mode': 'whole',
                                                              'sliding_inference_batch': 2,
                                                              'use_wandb': '${use_wandb}',
                                                              'val_loader': None},
@@ -230,73 +228,64 @@ INFO - 08/13/25 17:34:45 - 0:00:00 - 'batch_size': 8,
                                                            'precision': 'fp16',
                                                            'train_loader': None,
                                                            'use_wandb': '${use_wandb}'}},
-                                      'test_batch_size': 8,
-                                      'test_num_workers': 1,
+                                      'test_batch_size': 1,
+                                      'test_num_workers': 4,
                                       'train': True,
                                       'use_final_ckpt': False,
                                       'use_wandb': True,
-                                      'wandb_run_id': 'sejvhj1t',
+                                      'wandb_run_id': 'clx8s20f',
                                       'work_dir': ''
-INFO - 08/13/25 17:34:45 - 0:00:00 - The experiment is stored in logs/20250813_173444_remoteclip_seg_upernet_fivebillionpixels_02b492
+INFO - 08/14/25 12:02:38 - 0:00:00 - The experiment is stored in logs/20250814_120236_remoteclip_seg_upernet_fivebillionpixels_82bed2
                                      
-INFO - 08/13/25 17:34:45 - 0:00:00 - Device used: cuda:0
-INFO - 08/13/25 17:34:50 - 0:00:05 - Built remoteclip_encoder.
-INFO - 08/13/25 17:34:51 - 0:00:06 - Built UPerNet for with RemoteCLIP_Encoder encoder.
-INFO - 08/13/25 17:34:51 - 0:00:06 - Model Trainable Parameters: 16.731M
-WARNING - 08/13/25 17:34:52 - 0:00:06 - Could not calculate GMACs due to an error: Expected more than 1 value per channel when training, got input size torch.Size([1, 256, 1, 1])
-INFO - 08/13/25 17:34:52 - 0:00:07 - Built FiveBillionPixels dataset.
-INFO - 08/13/25 17:34:52 - 0:00:07 - Total number of train patches: 135
-                                     Total number of validation patches: 15
-                                     
-Evaluating epoch 0 on val set:   0%|          | 0/2 [00:00<?, ?it/s]Evaluating epoch 0 on val set:   0%|          | 0/2 [01:37<?, ?it/s]
-Error executing job with overrides: ['+experiment=train_remoteclip_fbp_BS8']
+INFO - 08/14/25 12:02:38 - 0:00:00 - Device used: cuda:0
+INFO - 08/14/25 12:02:42 - 0:00:04 - Built remoteclip_encoder.
+INFO - 08/14/25 12:02:43 - 0:00:05 - Built UPerNet for with RemoteCLIP_Encoder encoder.
+INFO - 08/14/25 12:02:43 - 0:00:05 - Model Trainable Parameters: 16.731M
+Error executing job with overrides: ['+experiment=test_remoteclip_fbp_BS8_hires']
 Traceback (most recent call last):
-  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/main.py", line 308, in main
-    trainer.train()
-  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/trainer.py", line 106, in train
-    metrics, used_time = self.evaluator(self.model, f"epoch {epoch}")
-                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/evaluator.py", line 493, in __call__
-    return self.evaluate(model, model_name, model_ckpt_path)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/evaluator.py", line 464, in evaluate
-    logits = self.sliding_inference(model, image, input_size, output_shape=target.shape[-2:],
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/evaluator.py", line 121, in sliding_inference
-    pred_ = model.forward(img_, output_shape=(input_size, input_size))
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1648, in forward
-    else self._run_ddp_forward(*inputs, **kwargs)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1474, in _run_ddp_forward
-    return self.module(*inputs, **kwargs)  # type: ignore[index]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/main.py", line 315, in main
+    trainer.load_model(cfg.ckpt_dir)
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/trainer.py", line 235, in load_model
+    model_dict = torch.load(resume_path, map_location=self.device, weights_only=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/serialization.py", line 1484, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/serialization.py", line 759, in _open_file_like
+    return _open_file(name_or_buffer, mode)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
-    return inner()
-           ^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1827, in inner
-    result = forward_call(*args, **kwargs)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/decoders/upernet.py", line 245, in forward
-    output = F.interpolate(output, size=output_shape, mode="bilinear")
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/nn/functional.py", line 4774, in interpolate
-    return torch._C._nn.upsample_bilinear2d(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 23.46 GiB of which 11.94 MiB is free. Including non-PyTorch memory, this process has 23.42 GiB memory in use. Of the allocated memory 22.59 GiB is allocated by PyTorch, and 191.80 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/serialization.py", line 740, in __init__
+    super().__init__(open(name, mode))
+                     ^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: 'logs/(best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35'
 
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-[rank0]:[W813 17:36:32.592596343 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-E0813 17:36:35.626000 1806770 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 1806774) of binary: /cluster/home/iyakushevsky/euler_env/bin/python3
+WARNING - 08/14/25 12:02:43 - 0:00:05 - Could not calculate GMACs due to an error: Tried to trace <__torch__.torch.classes.c10d.ProcessGroup object at 0x4ed4e120> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced.
+INFO - 08/14/25 12:02:44 - 0:00:06 - Built FiveBillionPixels dataset.
+INFO - 08/14/25 12:02:44 - 0:00:06 - Total number of train patches: 135
+                                     Total number of validation patches: 15
+                                     
+Error executing job with overrides: ['+experiment=test_remoteclip_fbp_BS8_hires']
+Traceback (most recent call last):
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/main.py", line 315, in main
+    trainer.load_model(cfg.ckpt_dir)
+  File "/cluster/work/igp_psr/iyakushevsky/GFMdistill/engine/trainer.py", line 235, in load_model
+    model_dict = torch.load(resume_path, map_location=self.device, weights_only=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/serialization.py", line 1484, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/serialization.py", line 759, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/serialization.py", line 740, in __init__
+    super().__init__(open(name, mode))
+                     ^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: 'logs/(best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+W0814 12:02:45.089000 1103432 torch/distributed/elastic/multiprocessing/api.py:900] Sending process 1103438 closing signal SIGTERM
+E0814 12:02:45.355000 1103432 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 1 (pid: 1103439) of binary: /cluster/home/iyakushevsky/euler_env/bin/python3
 Traceback (most recent call last):
   File "/cluster/home/iyakushevsky/euler_env/bin/torchrun", line 7, in <module>
     sys.exit(main())
@@ -322,10 +311,10 @@ Failures:
 ------------------------------------------------------------
 Root Cause (first observed failure):
 [0]:
-  time      : 2025-08-13_17:36:35
-  host      : eu-g3-068.euler.ethz.ch
-  rank      : 0 (local_rank: 0)
-  exitcode  : 1 (pid: 1806774)
+  time      : 2025-08-14_12:02:45
+  host      : eu-g3-066.euler.ethz.ch
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 1103439)
   error_file: <N/A>
   traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
 ============================================================

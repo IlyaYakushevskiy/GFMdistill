@@ -353,6 +353,7 @@ def main(cfg: DictConfig) -> None:
     
     test_evaluator.evaluate(decoder, "test_model", model_ckpt_path)
 
+
     if cfg.use_wandb and rank == 0:
         wandb.finish()
 

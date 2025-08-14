@@ -1,5 +1,5 @@
 # @package _global_
-### triaing remoteclip on FBP (requires 22GB of VRAM)
+### triaing remoteclip on FBP (requires 2 * 22GB GPU)
 
 defaults:
   - /dataset: fivebillionpixels
@@ -17,7 +17,7 @@ batch_size: 8
 test_batch_size: 1
 
 dataset: 
-  img_size: 224
+  img_size: 520
   root_path: '/cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/'
 
 encoder: 
@@ -30,7 +30,7 @@ task:
     inference_mode: whole #instead of sliding, should use cropped images
 
 optimizer:
-  lr: 14e-5
+  lr: 4e-4
 
 num_workers: 4
 test_num_workers: 4

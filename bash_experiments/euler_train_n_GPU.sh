@@ -7,9 +7,9 @@
 #SBATCH --gres=gpumem:22G
 #SBATCH --cpus-per-task=16
 #SBATCH --mem-per-cpu=4G
-#SBATCH --time 01:00:00
-#SBATCH -o job_output/rc_fbp_2GPU%j.out
-#SBATCH -e job_output/rc_fbp__2GPU%j.err
+#SBATCH --time 6:00:00
+#SBATCH -o job_output/test_rc_fbp_2GPU%j.out
+#SBATCH -e job_output/test_rc_fbp__2GPU%j.err
 
 echo "=== Job starting on $(hostname) at $(date) ==="
 
@@ -32,6 +32,6 @@ EOF
 
 cd /cluster/work/igp_psr/iyakushevsky/GFMdistill
 
-torchrun --nproc_per_node=2 main.py +experiment=train_remoteclip_fbp_BS8
+torchrun --nproc_per_node=2 main.py +experiment=test_remoteclip_fbp_BS8_hires
 
 echo "=== Job finished at $(date) ==="

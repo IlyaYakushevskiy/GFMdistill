@@ -13,6 +13,7 @@ from torch import Tensor
 from torch.utils.data import DataLoader
 from decoders.knnclassifier import KNNClassifier
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 
 class Evaluator:
@@ -433,6 +434,43 @@ class SegEvaluator(Evaluator):
     ):
         super().__init__(val_loader, exp_dir, device, inference_mode, sliding_inference_batch, use_wandb)
 
+    def generate_single_image_mask(self, model: torch.nn.Module, image_data: dict, output_filename: str):
+        """
+        Generates a prediction mask for a single image, paints it with the 'jet' colormap,
+        and saves it to the 'output_masks' directory.
+
+        Args:
+            model (torch.nn.Module): The model to use for inference.
+            image_data (dict): The pre-processed input image data dictionary.
+            output_filename (str): The filename for the saved mask.
+        """
+        self.logger.info(f"Generating prediction mask and saving to {output_filename}")
+        model.eval()
+
+        with torch.no_grad():
+            logits = model(image_data)
+
+            if logits.shape[1] == 1:
+                pred_mask = (torch.sigmoid(logits) > 0.5).type(torch.int64).squeeze(dim=1)
+            else:
+                pred_mask = torch.argmax(logits, dim=1)
+
+            # Move mask to CPU and convert to a NumPy array for visualization
+            pred_mask_np = pred_mask.squeeze().cpu().numpy()
+
+        # Create and save the visual mask using Matplotlib
+        output_dir = Path("output_masks")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        save_path = output_dir / output_filename
+        
+        fig, ax = plt.subplots()
+        ax.imshow(pred_mask_np, cmap='jet', vmin=0, vmax=self.num_classes - 1)
+        ax.axis('off')
+        plt.savefig(save_path, bbox_inches='tight', pad_inches=0, dpi=150)
+        plt.close(fig)
+
+        self.logger.info(f"Prediction mask saved to {save_path}")
+
     @torch.no_grad()
     def evaluate(self, model, model_name='model', model_ckpt_path=None):
         t = time.time()
@@ -453,11 +491,21 @@ class SegEvaluator(Evaluator):
             (self.num_classes, self.num_classes), device=self.device
         )
 
+        mask_generated = False
+
         for batch_idx, data in enumerate(tqdm(self.val_loader, desc=tag)):
 
             image, target = data["image"], data["target"]
             image = {k: v.to(self.device) for k, v in image.items()}
             target = target.to(self.device)
+
+            ##save mask 
+
+            if self.rank == 0 and not mask_generated: 
+                first_image_data = {k: v[0].unsqueeze(0) for k, v in image.items()}
+                mask_filename = f"{model_name}_mask.png"
+                self.generate_single_image_mask(model, first_image_data, mask_filename)
+                mask_generated = True
 
             if self.inference_mode == "sliding":
                 input_size = model.module.encoder.input_size

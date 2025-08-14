@@ -1,0 +1,889 @@
+
+Modules based on Lua: Version 8.7.24  2023-05-04 15:12 -05:00
+    by Robert McLay mclay@tacc.utexas.edu
+
+module [options] sub-command [args ...]
+
+Help sub-commands:
+------------------
+  help                              prints this message
+  help                module [...]  print help message from module(s)
+
+Loading/Unloading sub-commands:
+-------------------------------
+  load | add          module [...]  load module(s)
+  try-load | try-add  module [...]  Add module(s), do not complain if not
+                                    found
+  del | unload        module [...]  Remove module(s), do not complain if not
+                                    found
+  swap | sw | switch  m1 m2         unload m1 and load m2
+  purge                             unload all modules
+  refresh                           reload aliases from current list of
+                                    modules.
+  update                            reload all currently loaded modules.
+
+Listing / Searching sub-commands:
+---------------------------------
+  list                              List loaded modules
+  list                s1 s2 ...     List loaded modules that match the
+                                    pattern
+  avail | av                        List available modules
+  avail | av          string        List available modules that contain
+                                    "string".
+  category | cat                    List all categories
+  category | cat      s1 s2 ...     List all categories that match the
+                                    pattern and display their modules
+  overview | ov                     List all available modules by short
+                                    names with number of versions
+  overview | ov       string        List available modules by short names
+                                    with number of versions that contain
+                                    "string"
+  spider                            List all possible modules
+  spider              module        List all possible version of that module
+                                    file
+  spider              string        List all module that contain the
+                                    "string".
+  spider              name/version  Detailed information about that version
+                                    of the module.
+  whatis              module        Print whatis information about module
+  keyword | key       string        Search all name and whatis that contain
+                                    "string".
+
+Searching with Lmod:
+--------------------
+  All searching (spider, list, avail, keyword) support regular expressions:
+  
+
+  -r spider           '^p'          Finds all the modules that start with
+                                    `p' or `P'
+  -r spider           mpi           Finds all modules that have "mpi" in
+                                    their name.
+  -r spider           'mpi$         Finds all modules that end with "mpi" in
+                                    their name.
+
+Handling a collection of modules:
+--------------------------------
+  save | s                          Save the current list of modules to a
+                                    user defined "default" collection.
+  save | s            name          Save the current list of modules to
+                                    "name" collection.
+  reset                             The same as "restore system"
+  restore | r                       Restore modules from the user's
+                                    "default" or system default.
+  restore | r         name          Restore modules from "name" collection.
+  restore             system        Restore module state to system defaults.
+  savelist                          List of saved collections.
+  describe | mcc      name          Describe the contents of a module
+                                    collection.
+  disable             name          Disable (i.e. remove) a collection.
+
+Deprecated commands:
+--------------------
+  getdefault          [name]        load name collection of modules or
+                                    user's "default" if no name given.
+                                    ===> Use "restore" instead <====
+  setdefault          [name]        Save current list of modules to name if
+                                    given, otherwise save as the default
+                                    list for you the user.
+                                    ===> Use "save" instead. <====
+
+Miscellaneous sub-commands:
+---------------------------
+  is-loaded           modulefile    return a true status if module is loaded
+  is-avail            modulefile    return a true status if module can be
+                                    loaded
+  show                modulefile    show the commands in the module file.
+  use [-a]            path          Prepend or Append path to MODULEPATH.
+  unuse               path          remove path from MODULEPATH.
+  tablelist                         output list of active modules as a lua
+                                    table.
+
+Important Environment Variables:
+--------------------------------
+  LMOD_COLORIZE                     If defined to be "YES" then Lmod prints
+                                    properties and warning in color.
+
+    --------------------------------------------------------------------------
+
+Lmod Web Sites
+
+  Documentation:    https://lmod.readthedocs.org
+  GitHub:           https://github.com/TACC/Lmod
+  SourceForge:      https://lmod.sf.net
+  TACC Homepage:    https://www.tacc.utexas.edu/research-development/tacc-projects/lmod
+
+  To report a bug please read https://lmod.readthedocs.io/en/latest/075_bug_reporting.html
+    --------------------------------------------------------------------------
+
+
+wandb: Currently logged in as: ilyay to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20250813_182705-wwmg4bk8
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247
+wandb: ⭐️ View project at https://wandb.ai/ilyay/geofm-bench
+wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/wwmg4bk8
+INFO - 08/13/25 18:27:07 - 0:00:00 - ============ Initialized logger ============
+INFO - 08/13/25 18:27:07 - 0:00:00 - 'batch_size': 8,
+                                      'ckpt_dir': None,
+                                      'criterion': {'_target_': 'torch.nn.CrossEntropyLoss',
+                                                    'ignore_index': '${dataset.ignore_index}'},
+                                      'data_replicate': 1,
+                                      'dataset': {'_target_': 'data_loaders.fbp.FiveBillionPixels',
+                                                  'auto_download': False,
+                                                  'bands': {'optical': ['B4', 'B3', 'B2']},
+                                                  'classes': ['unlabeled', 'industrial area', 'paddy field',
+                                                              'irrigated field', 'dry cropland', 'garden land',
+                                                              'arbor forest', 'shrub forest', 'park',
+                                                              'natural meadow', 'artificial meadow', 'river',
+                                                              'urban residential', 'lake', 'pond', 'fish pond',
+                                                              'snow', 'bareland', 'rural residential', 'stadium',
+                                                              'square', 'road', 'overpass', 'railway station',
+                                                              'airport'],
+                                                  'data_max': {'optical': [0.0, 0.0, 0.0, 0.0]},
+                                                  'data_mean': {'optical': [124.3, 94.2, 98.0]},
+                                                  'data_min': {'optical': [0.0, 0.0, 0.0, 0.0]},
+                                                  'data_std': {'optical': [51.0, 50.0, 47.1]},
+                                                  'dataset_name': 'FiveBillionPixels',
+                                                  'distribution': [0.0, 0.0368, 0.0253, 0.3567, 0.0752, 0.0095,
+                                                                   0.0694, 0.0096, 0.0004, 0.0055, 0.0025, 0.0568,
+                                                                   0.0548, 0.1396, 0.0102, 0.0129, 0.0004, 0.0456,
+                                                                   0.0447, 0.0003, 0.0002, 0.0383, 0.0025, 0.0007,
+                                                                   0.0011],
+                                                  'download_url': False,
+                                                  'ignore_index': 0,
+                                                  'img_size': 224,
+                                                  'multi_modal': False,
+                                                  'multi_temporal': False,
+                                                  'num_classes': 25,
+                                                  'root_path': '/cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/',
+                                                  'use_cmyk': False},
+                                      'decoder': {'_target_': 'decoders.upernet.SegUPerNet',
+                                                  'channels': 256,
+                                                  'encoder': None,
+                                                  'finetune': '${finetune}',
+                                                  'num_classes': '${dataset.num_classes}'},
+                                      'encoder': {'_target_': 'encoders.remoteclip_encoder.RemoteCLIP_Encoder',
+                                                  'download_url': 'https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt',
+                                                  'embed_dim': 768,
+                                                  'encoder_weights': './pretrained_models/RemoteCLIP-ViT-B-32.pt',
+                                                  'head_width': 64,
+                                                  'input_bands': {'optical': ['B4', 'B3', 'B2']},
+                                                  'input_size': 224,
+                                                  'layers': 12,
+                                                  'mlp_ratio': 4.0,
+                                                  'output_dim': 768,
+                                                  'output_layers': [3, 5, 7, 11],
+                                                  'patch_size': 32,
+                                                  'width': 768},
+                                      'finetune': False,
+                                      'limited_label_strategy': 'stratified',
+                                      'limited_label_train': 1,
+                                      'limited_label_val': 1,
+                                      'lr_scheduler': {'_target_': 'utils.schedulers.MultiStepLR',
+                                                       'lr_milestones': [0.6, 0.9],
+                                                       'optimizer': None,
+                                                       'total_iters': None},
+                                      'num_workers': 4,
+                                      'optimizer': {'_target_': 'torch.optim.AdamW',
+                                                    'betas': [0.9, 0.999],
+                                                    'lr': 0.00014,
+                                                    'params': None,
+                                                    'weight_decay': 0.05},
+                                      'preprocessing': {'test': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                 'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                      {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                      {'_target_': 'engine.data_preprocessor.BandPadding'}]},
+                                                        'train': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                  'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.RandomCropToEncoder'},
+                                                                                       {'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                       {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                       {'_target_': 'engine.data_preprocessor.BandPadding'}]},
+                                                        'val': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                     {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                     {'_target_': 'engine.data_preprocessor.BandPadding'}]}},
+                                      'seed': 234,
+                                      'stratification_bins': 3,
+                                      'task': {'evaluator': {'_target_': 'engine.evaluator.SegEvaluator',
+                                                             'device': None,
+                                                             'exp_dir': None,
+                                                             'inference_mode': 'whole',
+                                                             'sliding_inference_batch': 2,
+                                                             'use_wandb': '${use_wandb}',
+                                                             'val_loader': None},
+                                               'trainer': {'_target_': 'engine.trainer.SegTrainer',
+                                                           'best_metric_key': 'mIoU',
+                                                           'ckpt_interval': 20,
+                                                           'criterion': None,
+                                                           'device': None,
+                                                           'eval_interval': 5,
+                                                           'evaluator': None,
+                                                           'exp_dir': None,
+                                                           'log_interval': 5,
+                                                           'lr_scheduler': None,
+                                                           'model': None,
+                                                           'n_epochs': 80,
+                                                           'optimizer': None,
+                                                           'precision': 'fp16',
+                                                           'train_loader': None,
+                                                           'use_wandb': '${use_wandb}'}},
+                                      'test_batch_size': 1,
+                                      'test_num_workers': 4,
+                                      'train': True,
+                                      'use_final_ckpt': False,
+                                      'use_wandb': True,
+                                      'wandb_run_id': 'wwmg4bk8',
+                                      'work_dir': ''
+INFO - 08/13/25 18:27:07 - 0:00:00 - The experiment is stored in logs/20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247
+                                     
+INFO - 08/13/25 18:27:07 - 0:00:00 - Device used: cuda:0
+INFO - 08/13/25 18:27:09 - 0:00:02 - Built remoteclip_encoder.
+INFO - 08/13/25 18:27:09 - 0:00:02 - Built UPerNet for with RemoteCLIP_Encoder encoder.
+INFO - 08/13/25 18:27:09 - 0:00:02 - Model Trainable Parameters: 16.731M
+Evaluating epoch 0 on val set:   0%|          | 0/8 [00:00<?, ?it/s]WARNING - 08/13/25 18:27:10 - 0:00:03 - Could not calculate GMACs due to an error: Tried to trace <__torch__.torch.classes.c10d.ProcessGroup object at 0x4cf3f530> but it is not part of the active trace. Modules that are called during a trace must be registered as submodules of the thing being traced.
+INFO - 08/13/25 18:27:10 - 0:00:03 - Built FiveBillionPixels dataset.
+INFO - 08/13/25 18:27:10 - 0:00:03 - Total number of train patches: 135
+                                     Total number of validation patches: 15
+                                     
+Evaluating epoch 0 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 0 on val set:  12%|█▎        | 1/8 [00:14<01:39, 14.17s/it]Evaluating epoch 0 on val set:  25%|██▌       | 2/8 [00:14<00:35,  5.92s/it]Evaluating epoch 0 on val set:  12%|█▎        | 1/8 [00:15<01:45, 15.04s/it]Evaluating epoch 0 on val set:  25%|██▌       | 2/8 [00:15<00:37,  6.27s/it]Evaluating epoch 0 on val set:  38%|███▊      | 3/8 [00:16<00:20,  4.02s/it]Evaluating epoch 0 on val set:  50%|█████     | 4/8 [00:16<00:09,  2.48s/it]Evaluating epoch 0 on val set:  62%|██████▎   | 5/8 [00:17<00:05,  1.93s/it]Evaluating epoch 0 on val set:  38%|███▊      | 3/8 [00:17<00:22,  4.55s/it]Evaluating epoch 0 on val set:  50%|█████     | 4/8 [00:17<00:11,  2.81s/it]Evaluating epoch 0 on val set:  75%|███████▌  | 6/8 [00:18<00:02,  1.47s/it]Evaluating epoch 0 on val set:  88%|████████▊ | 7/8 [00:19<00:01,  1.54s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:19<00:00,  1.09s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:20<00:00,  2.51s/it]
+Evaluating epoch 0 on val set:  62%|██████▎   | 5/8 [00:21<00:10,  3.40s/it]Evaluating epoch 0 on val set:  75%|███████▌  | 6/8 [00:28<00:08,  4.38s/it]Evaluating epoch 0 on val set:  88%|████████▊ | 7/8 [00:28<00:02,  3.00s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:28<00:00,  2.11s/it]Evaluating epoch 0 on val set: 100%|██████████| 8/8 [00:28<00:00,  3.57s/it]
+INFO - 08/13/25 18:27:39 - 0:00:32 - [val] ------- IoU --------
+                                     industrial area  	  0.000
+                                     paddy field      	  6.304
+                                     irrigated field  	  0.000
+                                     dry cropland     	  0.000
+                                     garden land      	  1.079
+                                     arbor forest     	  2.933
+                                     shrub forest     	  0.050
+                                     park             	  0.004
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  0.000
+                                     urban residential	  0.261
+                                     lake             	  0.000
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.367
+                                     rural residential	  0.323
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  0.472
+INFO - 08/13/25 18:27:39 - 0:00:32 - [val] ------- F1-score --------
+                                     industrial area  	  0.000
+                                     paddy field      	 11.860
+                                     irrigated field  	  0.000
+                                     dry cropland     	  0.000
+                                     garden land      	  2.136
+                                     arbor forest     	  5.698
+                                     shrub forest     	  0.101
+                                     park             	  0.007
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  0.000
+                                     urban residential	  0.520
+                                     lake             	  0.000
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.732
+                                     rural residential	  0.643
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  0.904
+INFO - 08/13/25 18:27:39 - 0:00:32 - [val] ------- Precision --------
+                                     industrial area  	  0.000
+                                     paddy field      	 51.236
+                                     irrigated field  	  0.000
+                                     dry cropland     	  0.000
+                                     garden land      	  1.970
+                                     arbor forest     	  3.850
+                                     shrub forest     	  0.082
+                                     park             	  0.726
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  0.000
+                                     urban residential	  0.284
+                                     lake             	  0.000
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	 16.442
+                                     rural residential	  0.336
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  3.122
+INFO - 08/13/25 18:27:39 - 0:00:32 - [val] ------- Recall --------
+                                     industrial area  	  0.000
+                                     paddy field      	  6.706
+                                     irrigated field  	  0.000
+                                     dry cropland     	  0.000
+                                     garden land      	  2.331
+                                     arbor forest     	 10.962
+                                     shrub forest     	  0.132
+                                     park             	  0.004
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  0.000
+                                     urban residential	  3.144
+                                     lake             	  0.000
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.374
+                                     rural residential	  7.400
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  1.294
+INFO - 08/13/25 18:27:39 - 0:00:32 - Mean Accuracy: 4.695 
+                                     
+/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+INFO - 08/13/25 18:27:40 - 0:00:32 - Epoch 0 | Training checkpoint saved at logs/20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247/checkpoint__best.pth
+/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+INFO - 08/13/25 18:27:41 - 0:00:34 - ============ Starting epoch 0 ... ============
+wandb: WARNING Tried to log to step 0 that is less than the current step 1. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+INFO - 08/13/25 18:30:09 - 0:03:02 - Epoch [0-5/8]	ETA [03h50m10s|00h01m03s]	Time [21.030|29.521]	Loss 1.9884 (2.6032)	lr 1.400e-04
+                                      Training metrics: Acc  63.555 ( 35.284)	mAcc  40.129 ( 20.414)	mIoU  12.043 (  6.716)
+INFO - 08/13/25 18:30:28 - 0:03:21 - ============ Starting epoch 1 ... ============
+INFO - 08/13/25 18:32:33 - 0:05:26 - Epoch [1-5/8]	ETA [03h30m44s|00h00m58s]	Time [19.439|16.541]	Loss 1.3798 (1.7907)	lr 1.400e-04
+                                      Training metrics: Acc  69.358 ( 51.671)	mAcc  21.464 ( 27.167)	mIoU  14.335 ( 10.307)
+INFO - 08/13/25 18:32:45 - 0:05:38 - ============ Starting epoch 2 ... ============
+INFO - 08/13/25 18:34:51 - 0:07:44 - Epoch [2-5/8]	ETA [02h58m37s|00h00m49s]	Time [16.576|14.659]	Loss 0.9617 (1.4744)	lr 1.400e-04
+                                      Training metrics: Acc  82.261 ( 55.698)	mAcc  41.270 ( 31.657)	mIoU  25.855 ( 14.657)
+INFO - 08/13/25 18:35:15 - 0:08:08 - ============ Starting epoch 3 ... ============
+INFO - 08/13/25 18:37:17 - 0:10:10 - Epoch [3-5/8]	ETA [03h16m13s|00h00m55s]	Time [18.522|15.051]	Loss 1.8974 (1.4732)	lr 1.400e-04
+                                      Training metrics: Acc  54.457 ( 58.793)	mAcc  40.517 ( 35.430)	mIoU  24.671 ( 18.294)
+INFO - 08/13/25 18:37:37 - 0:10:30 - ============ Starting epoch 4 ... ============
+INFO - 08/13/25 18:40:11 - 0:13:04 - Epoch [4-5/8]	ETA [03h13m14s|00h00m55s]	Time [18.471|21.584]	Loss 1.5695 (1.2498)	lr 1.400e-04
+                                      Training metrics: Acc  32.154 ( 60.755)	mAcc  30.573 ( 37.529)	mIoU  17.665 ( 19.960)
+Evaluating epoch 5 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 5 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 5 on val set:  12%|█▎        | 1/8 [00:14<01:43, 14.77s/it]Evaluating epoch 5 on val set:  12%|█▎        | 1/8 [00:14<01:43, 14.81s/it]Evaluating epoch 5 on val set:  25%|██▌       | 2/8 [00:14<00:36,  6.16s/it]Evaluating epoch 5 on val set:  38%|███▊      | 3/8 [00:15<00:17,  3.46s/it]Evaluating epoch 5 on val set:  50%|█████     | 4/8 [00:16<00:10,  2.70s/it]Evaluating epoch 5 on val set:  25%|██▌       | 2/8 [00:19<00:52,  8.75s/it]Evaluating epoch 5 on val set:  38%|███▊      | 3/8 [00:19<00:24,  4.82s/it]Evaluating epoch 5 on val set:  50%|█████     | 4/8 [00:19<00:11,  2.97s/it]Evaluating epoch 5 on val set:  62%|██████▎   | 5/8 [00:21<00:10,  3.54s/it]Evaluating epoch 5 on val set:  62%|██████▎   | 5/8 [00:21<00:08,  2.67s/it]Evaluating epoch 5 on val set:  75%|███████▌  | 6/8 [00:21<00:04,  2.38s/it]Evaluating epoch 5 on val set:  75%|███████▌  | 6/8 [00:21<00:03,  1.81s/it]Evaluating epoch 5 on val set:  88%|████████▊ | 7/8 [00:22<00:01,  1.27s/it]Evaluating epoch 5 on val set:  88%|████████▊ | 7/8 [00:22<00:01,  1.70s/it]Evaluating epoch 5 on val set: 100%|██████████| 8/8 [00:22<00:00,  1.07it/s]Evaluating epoch 5 on val set: 100%|██████████| 8/8 [00:22<00:00,  1.20s/it]Evaluating epoch 5 on val set: 100%|██████████| 8/8 [00:22<00:00,  2.79s/it]
+Evaluating epoch 5 on val set: 100%|██████████| 8/8 [00:22<00:00,  2.79s/it]
+INFO - 08/13/25 18:40:34 - 0:13:27 - [val] ------- IoU --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 46.040
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	  5.910
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  1.029
+                                     urban residential	  0.181
+                                     lake             	  5.757
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.125
+                                     rural residential	  4.246
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  2.637
+INFO - 08/13/25 18:40:34 - 0:13:27 - [val] ------- F1-score --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 63.051
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 11.160
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  2.038
+                                     urban residential	  0.361
+                                     lake             	 10.888
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.249
+                                     rural residential	  8.145
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  3.996
+INFO - 08/13/25 18:40:34 - 0:13:27 - [val] ------- Precision --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 75.194
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	  6.444
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  1.549
+                                     urban residential	  0.192
+                                     lake             	  5.918
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.133
+                                     rural residential	 24.220
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  4.735
+INFO - 08/13/25 18:40:34 - 0:13:27 - [val] ------- Recall --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 54.285
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 41.649
+                                     shrub forest     	  0.000
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  2.977
+                                     urban residential	  3.154
+                                     lake             	 67.983
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  2.006
+                                     rural residential	  4.896
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.000
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  7.373
+INFO - 08/13/25 18:40:34 - 0:13:27 - Mean Accuracy: 42.052 
+                                     
+INFO - 08/13/25 18:40:35 - 0:13:28 - Epoch 5 | Training checkpoint saved at logs/20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247/checkpoint__best.pth
+INFO - 08/13/25 18:40:35 - 0:13:28 - ============ Starting epoch 5 ... ============
+INFO - 08/13/25 18:42:42 - 0:15:35 - Epoch [5-5/8]	ETA [03h18m25s|00h00m58s]	Time [19.367|15.191]	Loss 0.9747 (1.1232)	lr 1.400e-04
+                                      Training metrics: Acc  80.117 ( 62.802)	mAcc  39.869 ( 38.409)	mIoU  23.110 ( 20.928)
+INFO - 08/13/25 18:43:04 - 0:15:57 - ============ Starting epoch 6 ... ============
+INFO - 08/13/25 18:45:13 - 0:18:06 - Epoch [6-5/8]	ETA [03h02m28s|00h00m54s]	Time [18.002|17.181]	Loss 1.2224 (1.0178)	lr 1.400e-04
+                                      Training metrics: Acc  74.002 ( 64.582)	mAcc  55.527 ( 40.528)	mIoU  39.115 ( 22.623)
+INFO - 08/13/25 18:45:13 - 0:18:06 - ============ Starting epoch 7 ... ============
+INFO - 08/13/25 18:47:15 - 0:20:08 - Epoch [7-5/8]	ETA [02h43m33s|00h00m48s]	Time [16.289|14.899]	Loss 0.5884 (0.9689)	lr 1.400e-04
+                                      Training metrics: Acc  86.842 ( 65.851)	mAcc  57.811 ( 42.595)	mIoU  43.273 ( 24.415)
+INFO - 08/13/25 18:47:54 - 0:20:47 - ============ Starting epoch 8 ... ============
+INFO - 08/13/25 18:49:58 - 0:22:51 - Epoch [8-5/8]	ETA [03h15m59s|00h00m59s]	Time [19.925|20.180]	Loss 1.6696 (1.0185)	lr 1.400e-04
+                                      Training metrics: Acc  53.651 ( 67.101)	mAcc  41.023 ( 44.001)	mIoU  17.724 ( 25.743)
+INFO - 08/13/25 18:50:11 - 0:23:04 - ============ Starting epoch 9 ... ============
+INFO - 08/13/25 18:52:24 - 0:25:17 - Epoch [9-5/8]	ETA [02h50m42s|00h00m52s]	Time [17.514|18.127]	Loss 0.8758 (0.7673)	lr 1.400e-04
+                                      Training metrics: Acc  81.310 ( 68.610)	mAcc  38.589 ( 44.775)	mIoU  28.314 ( 26.607)
+Evaluating epoch 10 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 10 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 10 on val set:  12%|█▎        | 1/8 [00:13<01:32, 13.27s/it]Evaluating epoch 10 on val set:  25%|██▌       | 2/8 [00:14<00:37,  6.29s/it]Evaluating epoch 10 on val set:  38%|███▊      | 3/8 [00:16<00:22,  4.41s/it]Evaluating epoch 10 on val set:  50%|█████     | 4/8 [00:16<00:10,  2.72s/it]Evaluating epoch 10 on val set:  12%|█▎        | 1/8 [00:17<02:03, 17.66s/it]Evaluating epoch 10 on val set:  25%|██▌       | 2/8 [00:17<00:44,  7.36s/it]Evaluating epoch 10 on val set:  38%|███▊      | 3/8 [00:17<00:20,  4.06s/it]Evaluating epoch 10 on val set:  50%|█████     | 4/8 [00:18<00:10,  2.51s/it]Evaluating epoch 10 on val set:  62%|██████▎   | 5/8 [00:20<00:07,  2.48s/it]Evaluating epoch 10 on val set:  75%|███████▌  | 6/8 [00:20<00:03,  1.77s/it]Evaluating epoch 10 on val set:  88%|████████▊ | 7/8 [00:21<00:01,  1.34s/it]Evaluating epoch 10 on val set: 100%|██████████| 8/8 [00:21<00:00,  1.04it/s]Evaluating epoch 10 on val set: 100%|██████████| 8/8 [00:21<00:00,  2.70s/it]
+Evaluating epoch 10 on val set:  62%|██████▎   | 5/8 [00:22<00:10,  3.63s/it]Evaluating epoch 10 on val set:  75%|███████▌  | 6/8 [00:22<00:04,  2.45s/it]Evaluating epoch 10 on val set:  88%|████████▊ | 7/8 [00:22<00:01,  1.70s/it]Evaluating epoch 10 on val set: 100%|██████████| 8/8 [00:22<00:00,  1.20s/it]Evaluating epoch 10 on val set: 100%|██████████| 8/8 [00:22<00:00,  2.84s/it]
+INFO - 08/13/25 18:53:01 - 0:25:54 - [val] ------- IoU --------
+                                     industrial area  	  1.799
+                                     paddy field      	  0.002
+                                     irrigated field  	 21.624
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 38.486
+                                     shrub forest     	 16.229
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  9.232
+                                     urban residential	  0.057
+                                     lake             	  5.517
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  1.117
+                                     rural residential	  5.840
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.407
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  4.180
+INFO - 08/13/25 18:53:01 - 0:25:54 - [val] ------- F1-score --------
+                                     industrial area  	  3.534
+                                     paddy field      	  0.005
+                                     irrigated field  	 35.559
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 55.581
+                                     shrub forest     	 27.927
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 16.903
+                                     urban residential	  0.114
+                                     lake             	 10.458
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  2.210
+                                     rural residential	 11.035
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.811
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  6.839
+INFO - 08/13/25 18:53:01 - 0:25:54 - [val] ------- Precision --------
+                                     industrial area  	  1.934
+                                     paddy field      	  0.002
+                                     irrigated field  	 23.247
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 40.271
+                                     shrub forest     	 41.514
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 39.289
+                                     urban residential	  0.087
+                                     lake             	  8.921
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	 15.850
+                                     rural residential	 60.442
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.451
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  9.667
+INFO - 08/13/25 18:53:01 - 0:25:54 - [val] ------- Recall --------
+                                     industrial area  	 20.487
+                                     paddy field      	  0.074
+                                     irrigated field  	 75.595
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 89.672
+                                     shrub forest     	 21.040
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 10.768
+                                     urban residential	  0.163
+                                     lake             	 12.633
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  1.188
+                                     rural residential	  6.072
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  4.001
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	 10.070
+INFO - 08/13/25 18:53:01 - 0:25:54 - Mean Accuracy: 21.766 
+                                     
+INFO - 08/13/25 18:53:02 - 0:25:55 - Epoch 10 | Training checkpoint saved at logs/20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247/checkpoint__best.pth
+INFO - 08/13/25 18:53:02 - 0:25:55 - ============ Starting epoch 10 ... ============
+INFO - 08/13/25 18:55:12 - 0:28:05 - Epoch [10-5/8]	ETA [02h56m38s|00h00m55s]	Time [18.478|17.268]	Loss 0.5656 (0.9445)	lr 1.400e-04
+                                      Training metrics: Acc  93.640 ( 69.235)	mAcc  81.501 ( 46.193)	mIoU  48.642 ( 27.628)
+INFO - 08/13/25 18:55:45 - 0:28:38 - ============ Starting epoch 11 ... ============
+INFO - 08/13/25 18:57:40 - 0:30:33 - Epoch [11-5/8]	ETA [02h57m16s|00h00m56s]	Time [18.818|14.239]	Loss 0.6223 (0.8745)	lr 1.400e-04
+                                      Training metrics: Acc  84.911 ( 69.584)	mAcc  63.824 ( 47.027)	mIoU  43.782 ( 28.203)
+INFO - 08/13/25 18:57:40 - 0:30:33 - ============ Starting epoch 12 ... ============
+INFO - 08/13/25 18:59:35 - 0:32:28 - Epoch [12-5/8]	ETA [02h12m33s|00h00m42s]	Time [14.119|14.351]	Loss 1.2458 (0.9342)	lr 1.400e-04
+                                      Training metrics: Acc  55.068 ( 70.383)	mAcc  40.895 ( 47.767)	mIoU  18.630 ( 28.865)
+INFO - 08/13/25 18:59:35 - 0:32:28 - ============ Starting epoch 13 ... ============
+INFO - 08/13/25 19:01:31 - 0:34:24 - Epoch [13-5/8]	ETA [02h14m39s|00h00m43s]	Time [14.568|14.449]	Loss 0.7458 (0.9184)	lr 1.400e-04
+                                      Training metrics: Acc  80.300 ( 72.705)	mAcc  63.720 ( 49.827)	mIoU  52.442 ( 30.802)
+INFO - 08/13/25 19:01:32 - 0:34:25 - ============ Starting epoch 14 ... ============
+INFO - 08/13/25 19:03:33 - 0:36:26 - Epoch [14-5/8]	ETA [02h12m02s|00h00m43s]	Time [14.491|15.109]	Loss 0.9638 (0.9618)	lr 1.400e-04
+                                      Training metrics: Acc  72.616 ( 73.982)	mAcc  55.482 ( 51.897)	mIoU  26.228 ( 32.342)
+Evaluating epoch 15 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 15 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 15 on val set:  12%|█▎        | 1/8 [00:12<01:28, 12.62s/it]Evaluating epoch 15 on val set:  12%|█▎        | 1/8 [00:12<01:28, 12.63s/it]Evaluating epoch 15 on val set:  25%|██▌       | 2/8 [00:12<00:31,  5.28s/it]Evaluating epoch 15 on val set:  38%|███▊      | 3/8 [00:13<00:16,  3.36s/it]Evaluating epoch 15 on val set:  25%|██▌       | 2/8 [00:13<00:35,  5.92s/it]Evaluating epoch 15 on val set:  50%|█████     | 4/8 [00:13<00:08,  2.09s/it]Evaluating epoch 15 on val set:  38%|███▊      | 3/8 [00:15<00:19,  3.91s/it]Evaluating epoch 15 on val set:  50%|█████     | 4/8 [00:17<00:12,  3.25s/it]Evaluating epoch 15 on val set:  62%|██████▎   | 5/8 [00:21<00:10,  3.45s/it]Evaluating epoch 15 on val set:  62%|██████▎   | 5/8 [00:21<00:12,  4.11s/it]Evaluating epoch 15 on val set:  75%|███████▌  | 6/8 [00:21<00:05,  2.76s/it]Evaluating epoch 15 on val set:  88%|████████▊ | 7/8 [00:22<00:01,  1.95s/it]Evaluating epoch 15 on val set: 100%|██████████| 8/8 [00:22<00:00,  1.37s/it]Evaluating epoch 15 on val set: 100%|██████████| 8/8 [00:22<00:00,  2.78s/it]
+Evaluating epoch 15 on val set:  75%|███████▌  | 6/8 [00:23<00:05,  2.84s/it]Evaluating epoch 15 on val set:  88%|████████▊ | 7/8 [00:23<00:01,  1.96s/it]Evaluating epoch 15 on val set: 100%|██████████| 8/8 [00:23<00:00,  1.38s/it]Evaluating epoch 15 on val set: 100%|██████████| 8/8 [00:23<00:00,  2.93s/it]
+INFO - 08/13/25 19:04:03 - 0:36:56 - [val] ------- IoU --------
+                                     industrial area  	  1.085
+                                     paddy field      	  0.000
+                                     irrigated field  	  5.892
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 24.503
+                                     shrub forest     	  9.487
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  8.132
+                                     urban residential	  0.000
+                                     lake             	 17.925
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.501
+                                     rural residential	  6.134
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.306
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  3.082
+INFO - 08/13/25 19:04:03 - 0:36:56 - [val] ------- F1-score --------
+                                     industrial area  	  2.147
+                                     paddy field      	  0.000
+                                     irrigated field  	 11.128
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 39.361
+                                     shrub forest     	 17.330
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 15.041
+                                     urban residential	  0.000
+                                     lake             	 30.400
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.997
+                                     rural residential	 11.559
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.611
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  5.357
+INFO - 08/13/25 19:04:03 - 0:36:56 - [val] ------- Precision --------
+                                     industrial area  	  1.169
+                                     paddy field      	  0.000
+                                     irrigated field  	  5.956
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 48.873
+                                     shrub forest     	 27.663
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 43.388
+                                     urban residential	  0.000
+                                     lake             	 29.178
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  2.823
+                                     rural residential	 70.055
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.396
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  9.563
+INFO - 08/13/25 19:04:03 - 0:36:56 - [val] ------- Recall --------
+                                     industrial area  	 13.151
+                                     paddy field      	  0.000
+                                     irrigated field  	 84.547
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 32.949
+                                     shrub forest     	 12.617
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	  9.097
+                                     urban residential	  0.000
+                                     lake             	 31.729
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  0.605
+                                     rural residential	  6.299
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  1.332
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  8.014
+INFO - 08/13/25 19:04:03 - 0:36:56 - Mean Accuracy: 14.468 
+                                     
+INFO - 08/13/25 19:04:03 - 0:36:56 - ============ Starting epoch 15 ... ============
+INFO - 08/13/25 19:06:13 - 0:39:06 - Epoch [15-5/8]	ETA [02h31m07s|00h00m50s]	Time [16.994|16.498]	Loss 1.7193 (0.8571)	lr 1.400e-04
+                                      Training metrics: Acc  45.996 ( 74.305)	mAcc  50.917 ( 52.384)	mIoU  23.855 ( 32.972)
+INFO - 08/13/25 19:06:24 - 0:39:17 - ============ Starting epoch 16 ... ============
+INFO - 08/13/25 19:08:35 - 0:41:28 - Epoch [16-5/8]	ETA [02h36m54s|00h00m53s]	Time [17.947|16.792]	Loss 0.8060 (0.7939)	lr 1.400e-04
+                                      Training metrics: Acc  81.037 ( 75.181)	mAcc  63.621 ( 53.335)	mIoU  38.937 ( 33.619)
+INFO - 08/13/25 19:08:46 - 0:41:39 - ============ Starting epoch 17 ... ============
+INFO - 08/13/25 19:11:15 - 0:44:07 - Epoch [17-5/8]	ETA [02h34m41s|00h00m53s]	Time [17.968|16.875]	Loss 0.7045 (0.8485)	lr 1.400e-04
+                                      Training metrics: Acc  81.357 ( 76.059)	mAcc  38.217 ( 54.380)	mIoU  24.901 ( 34.565)
+INFO - 08/13/25 19:11:15 - 0:44:08 - ============ Starting epoch 18 ... ============
+INFO - 08/13/25 19:13:30 - 0:46:23 - Epoch [18-5/8]	ETA [02h37m43s|00h00m55s]	Time [18.632|16.783]	Loss 0.5185 (0.8101)	lr 1.400e-04
+                                      Training metrics: Acc  87.126 ( 76.060)	mAcc  61.658 ( 54.900)	mIoU  43.859 ( 35.111)
+INFO - 08/13/25 19:13:30 - 0:46:23 - ============ Starting epoch 19 ... ============
+INFO - 08/13/25 19:16:00 - 0:48:53 - Epoch [19-5/8]	ETA [02h21m48s|00h00m50s]	Time [16.962|18.662]	Loss 0.7187 (0.8437)	lr 1.400e-04
+                                      Training metrics: Acc  71.921 ( 76.470)	mAcc  46.101 ( 54.708)	mIoU  19.195 ( 34.914)
+Evaluating epoch 20 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 20 on val set:   0%|          | 0/8 [00:00<?, ?it/s]Evaluating epoch 20 on val set:  12%|█▎        | 1/8 [00:13<01:32, 13.18s/it]Evaluating epoch 20 on val set:  12%|█▎        | 1/8 [00:13<01:32, 13.18s/it]Evaluating epoch 20 on val set:  25%|██▌       | 2/8 [00:15<00:39,  6.57s/it]Evaluating epoch 20 on val set:  38%|███▊      | 3/8 [00:15<00:18,  3.64s/it]Evaluating epoch 20 on val set:  50%|█████     | 4/8 [00:16<00:10,  2.58s/it]Evaluating epoch 20 on val set:  25%|██▌       | 2/8 [00:18<00:53,  8.83s/it]Evaluating epoch 20 on val set:  38%|███▊      | 3/8 [00:19<00:24,  4.88s/it]Evaluating epoch 20 on val set:  50%|█████     | 4/8 [00:19<00:12,  3.00s/it]Evaluating epoch 20 on val set:  62%|██████▎   | 5/8 [00:19<00:08,  2.81s/it]Evaluating epoch 20 on val set:  75%|███████▌  | 6/8 [00:21<00:04,  2.43s/it]Evaluating epoch 20 on val set:  88%|████████▊ | 7/8 [00:21<00:01,  1.68s/it]Evaluating epoch 20 on val set: 100%|██████████| 8/8 [00:21<00:00,  1.25s/it]Evaluating epoch 20 on val set: 100%|██████████| 8/8 [00:21<00:00,  2.71s/it]
+Evaluating epoch 20 on val set:  62%|██████▎   | 5/8 [00:22<00:09,  3.03s/it]Evaluating epoch 20 on val set:  75%|███████▌  | 6/8 [00:22<00:04,  2.05s/it]Evaluating epoch 20 on val set:  88%|████████▊ | 7/8 [00:22<00:01,  1.43s/it]Evaluating epoch 20 on val set: 100%|██████████| 8/8 [00:22<00:00,  1.03s/it]Evaluating epoch 20 on val set: 100%|██████████| 8/8 [00:22<00:00,  2.86s/it]
+INFO - 08/13/25 19:16:25 - 0:49:18 - [val] ------- IoU --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 14.727
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 35.482
+                                     shrub forest     	 11.438
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 10.924
+                                     urban residential	  1.048
+                                     lake             	 27.710
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  2.082
+                                     rural residential	  6.558
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.234
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  4.592
+INFO - 08/13/25 19:16:25 - 0:49:18 - [val] ------- F1-score --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 25.673
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 52.379
+                                     shrub forest     	 20.528
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 19.697
+                                     urban residential	  2.074
+                                     lake             	 43.395
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  4.080
+                                     rural residential	 12.309
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.467
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	  7.525
+INFO - 08/13/25 19:16:25 - 0:49:18 - [val] ------- Precision --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 15.329
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 40.895
+                                     shrub forest     	 55.642
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 14.008
+                                     urban residential	  5.570
+                                     lake             	 75.177
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	 11.054
+                                     rural residential	 63.057
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  0.259
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	 11.708
+INFO - 08/13/25 19:16:25 - 0:49:18 - [val] ------- Recall --------
+                                     industrial area  	  0.000
+                                     paddy field      	  0.000
+                                     irrigated field  	 78.945
+                                     dry cropland     	  0.000
+                                     garden land      	  0.000
+                                     arbor forest     	 72.832
+                                     shrub forest     	 12.585
+                                     park             	  0.000
+                                     natural meadow   	  0.000
+                                     artificial meadow	  0.000
+                                     river            	 33.166
+                                     urban residential	  1.274
+                                     lake             	 30.500
+                                     pond             	  0.000
+                                     fish pond        	  0.000
+                                     snow             	  0.000
+                                     bareland         	  2.501
+                                     rural residential	  6.820
+                                     stadium          	  0.000
+                                     square           	  0.000
+                                     road             	  2.347
+                                     overpass         	  0.000
+                                     railway station  	  0.000
+                                     airport          	  0.000
+                                     [val]-------------------
+                                     [val] Mean       	 10.040
+INFO - 08/13/25 19:16:25 - 0:49:18 - Mean Accuracy: 20.987 
+                                     
+INFO - 08/13/25 19:16:38 - 0:49:31 - Epoch 20 | Training checkpoint saved at logs/20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247/checkpoint__best.pth
+INFO - 08/13/25 19:16:38 - 0:49:31 - ============ Starting epoch 20 ... ============
+INFO - 08/13/25 19:18:55 - 0:51:48 - Epoch [20-5/8]	ETA [02h39m26s|00h00m58s]	Time [19.535|17.204]	Loss 0.8379 (0.7962)	lr 1.400e-04
+                                      Training metrics: Acc  76.317 ( 76.382)	mAcc  53.684 ( 54.635)	mIoU  30.070 ( 34.756)
+INFO - 08/13/25 19:19:15 - 0:52:08 - Epoch 20 | Training checkpoint saved at logs/20250813_182705_remoteclip_seg_upernet_fivebillionpixels_20e247/checkpoint_20.pth
+INFO - 08/13/25 19:19:15 - 0:52:08 - ============ Starting epoch 21 ... ============
+INFO - 08/13/25 19:21:43 - 0:54:36 - Epoch [21-5/8]	ETA [02h30m55s|00h00m56s]	Time [18.773|20.733]	Loss 0.5733 (0.7396)	lr 1.400e-04
+                                      Training metrics: Acc  77.955 ( 76.548)	mAcc  58.225 ( 54.755)	mIoU  42.908 ( 35.039)
+INFO - 08/13/25 19:21:50 - 0:54:43 - ============ Starting epoch 22 ... ============
+INFO - 08/13/25 19:24:15 - 0:57:08 - Epoch [22-5/8]	ETA [02h32m33s|00h00m57s]	Time [19.315|18.867]	Loss 0.5230 (0.8455)	lr 1.400e-04
+                                      Training metrics: Acc  85.564 ( 76.245)	mAcc  46.550 ( 54.964)	mIoU  33.056 ( 35.125)
+INFO - 08/13/25 19:24:16 - 0:57:09 - ============ Starting epoch 23 ... ============
+slurmstepd: error: *** JOB 40082763 ON eu-g3-073 CANCELLED AT 2025-08-13T19:26:33 DUE TO TIME LIMIT ***
