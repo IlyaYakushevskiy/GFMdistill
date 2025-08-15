@@ -57,3 +57,15 @@ class DICELoss(torch.nn.Module):
 
         return dice_loss
 
+class DistillFeaturesLoss(torch.nn.Module):
+    def __init__(self, ignore_index: int) -> None:
+        super(DistillFeaturesLoss, self).__init__()
+        self.ignore_index = ignore_index
+
+class DistillLogitLoss(torch.nn.Module):
+    def __init__(self, ignore_index: int) -> None:
+        super(DistillLogitLoss, self).__init__()
+        self.ignore_index = ignore_index
+
+    #def forward(self, logits, target, logits_teacher): 
+         
