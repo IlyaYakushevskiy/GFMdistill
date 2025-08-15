@@ -14,7 +14,7 @@ defaults:
 train: true
 finetune: false #freezes decoder
 batch_size: 8
-test_batch_size: 1
+test_batch_size: 8
 
 dataset: 
   img_size: 520
@@ -27,7 +27,8 @@ encoder:
 
 task:
   evaluator:
-    inference_mode: whole #instead of sliding, should use cropped images
+    inference_mode: sliding #instead of sliding, should use cropped images
+    sliding_inference_batch: 1
 
 optimizer:
   lr: 4e-4

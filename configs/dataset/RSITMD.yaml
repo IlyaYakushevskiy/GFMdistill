@@ -1,0 +1,101 @@
+_target_: data_loaders.rsitmd.RSITMD
+dataset_name: RSITMD
+root_path: ./data/RSITMD
+download_url: False 
+auto_download: False
+use_cmyk: False
+json_filename: "dataset_RSITMD_split.json"
+
+multi_temporal: False
+multi_modal: False
+
+# classes
+num_classes: 33
+img_size: 256
+ignore_index: -100 # Standard for classification, not really used
+
+classes:
+  - airport
+  - bareland
+  - baseballfield
+  - beach
+  - boat
+  - bridge
+  - center
+  - church
+  - commercial
+  - denseresidential
+  - desert
+  - farmland
+  - forest
+  - industrial
+  - intersection
+  - meadow
+  - mediumresidential
+  - mountain
+  - park
+  - parking
+  - plane
+  - playground
+  - pond
+  - port
+  - railwaystation
+  - resort
+  - river
+  - school
+  - sparseresidential
+  - square
+  - stadium
+  - storagetanks
+  - viaduct
+
+bands:
+  optical:
+    - 'B1'
+    - 'B2'
+    - 'B3'
+
+distribution: # Image count per class (overall)
+  - 134 # airport
+  - 58 # bareland
+  - 105 # baseballfield
+  - 154 # beach
+  - 15 # boat
+  - 155 # bridge
+  - 146 # center
+  - 136 # church
+  - 148 # commercial
+  - 157 # denseresidential
+  - 126 # desert
+  - 177 # farmland
+  - 116 # forest
+  - 207 # industrial
+  - 17 # intersection
+  - 127 # meadow
+  - 130 # mediumresidential
+  - 109 # mountain
+  - 160 # park
+  - 143 # parking
+  - 6 # plane
+  - 191 # playground
+  - 224 # pond
+  - 178 # port
+  - 112 # railwaystation
+  - 166 # resort
+  - 188 # river
+  - 165 # school
+  - 157 # sparseresidential
+  - 196 # square
+  - 201 # stadium
+  - 251 # storagetanks
+  - 188 # viaduct
+
+
+data_mean:
+  optical: [0.399477, 0.410661, 0.371083]
+data_std:
+  optical: [0.217282, 0.195615, 0.19377]
+data_min:
+  optical: [0.0, 0.0, 0.0]
+data_max:
+  optical: [1.0, 1.0, 1.0]

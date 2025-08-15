@@ -19,6 +19,7 @@ data/mados/*
 !data/mados/splits
 data/mados/splits/*
 !data/mados/splits/tiny_X.txt
+/bash_experiments/job_output
 
 .vscode
 .idea

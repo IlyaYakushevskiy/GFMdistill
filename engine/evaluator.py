@@ -191,7 +191,8 @@ class LinearClassificationEvaluator(Evaluator):
             target = target.to(self.device)
             
             with torch.no_grad():
-                logits, feature_maps = model(image)
+                #logits, feature_maps = model(image) #if save featuremaps, works with mnist (lookup your mnist decoder)
+                logits = model(image)
 
             
 

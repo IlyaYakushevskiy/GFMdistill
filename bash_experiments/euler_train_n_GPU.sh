@@ -5,16 +5,15 @@
 #SBATCH --gpus-per-node=2
 # #SBATCH --gpus=rtx_4090:2
 #SBATCH --gres=gpumem:22G
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=4G
-#SBATCH --time 6:00:00
-#SBATCH -o job_output/test_rc_fbp_2GPU%j.out
-#SBATCH -e job_output/test_rc_fbp__2GPU%j.err
+#SBATCH --time 1:00:00
+#SBATCH -o job_output/train_rc_RSITMD_2GPU%j.out
+#SBATCH -e job_output/train_rc_RSITMD__2GPU%j.err
 
 echo "=== Job starting on $(hostname) at $(date) ==="
 
 module eth_proxy load stack/2024-05 gcc/13.2.0 cuda/12.1.1 python/3.11.6_cuda
-#module load eth_proxy stack/2024-06 gcc/12.2.0 cuda/12.1.1 python/3.11.6_cuda 
 
 source ~/euler_env/bin/activate
 echo "Activated Python venv: $(which python)"
@@ -32,6 +31,6 @@ EOF
 
 cd /cluster/work/igp_psr/iyakushevsky/GFMdistill
 
-torchrun --nproc_per_node=2 main.py +experiment=test_remoteclip_fbp_BS8_hires
+torchrun --nproc_per_node=2 main.py +experiment=train_remoteclip_RSITMD
 
 echo "=== Job finished at $(date) ==="
