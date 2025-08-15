@@ -5,7 +5,7 @@ download_url: False
 auto_download: False
 use_cmyk: False
 
-img_size: 256 # 520 in paper, 256 for faster training
+img_size: 520 # 520 in paper, 256 for faster training
 multi_temporal: False
 multi_modal: False
 
@@ -73,13 +73,13 @@ bands:
     - B2
 data_mean:
   optical:
-    - 92.6
+  #  - 92.6
     - 124.3
     - 94.2
     - 98.
 data_std:
   optical:
-    - 44.5
+  #  - 44.5
     - 51.
     - 50.
     - 47.1

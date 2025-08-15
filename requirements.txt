@@ -1,23 +1,39 @@
-torch>=2.1.0
+# Core deep learning
+torch>=2.1
 torchvision
+torchaudio
+#pytorch-cuda==11.8; platform_system=="Linux"  # CUDA 11.8 support (Linux only)
+
+# Models & transformers
+transformers
+timm
+open-clip-torch
+torchmetrics
+
+# Geospatial & raster data
 geopandas
 rasterio
-pillow
-scikit-learn
-tensorboard
-tqdm
 tifffile
-timm
-einops
-opencv-python
-rioxarray
-gdown
+
+# Utilities & metrics
 ptflops
-google-cloud-storage
-omegaconf
-pyDataverse
-pytest
-yacs
-wandb
+fvcore
+numpy>=2.0
+tqdm
+matplotlib
+scikit-learn
 hydra-core
 
+# Cloud storage
+google-cloud-storage
+gdown
+wandb
+
+# CV & image processing
+opencv-python-headless
+pillow
+
+# Jupyter & logging
+ipykernel
+jupyterlab
+tensorboard

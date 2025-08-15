@@ -70,12 +70,21 @@ def main(cfg: DictConfig) -> None:
     # fix all random seeds
     fix_seed(cfg.seed)
     # distributed training variables
-    rank = cfg.rank
-    local_rank = int(cfg.local_rank)
+    # rank = cfg.rank
+    # local_rank = int(cfg.local_rank)
+
+
+    # device = torch.device("cuda", local_rank)
+
+    local_rank = int(os.environ["LOCAL_RANK"])
+    rank = int(os.environ["RANK"])
+    torch.distributed.init_process_group(backend="nccl")
+    torch.cuda.set_device(local_rank)
     device = torch.device("cuda", local_rank)
 
-    torch.cuda.set_device(device)
-    torch.distributed.init_process_group(backend="nccl")
+
+    # torch.cuda.set_device(device)
+    # torch.distributed.init_process_group(backend="nccl")
 
     # true if training else false
     train_run = cfg.train
@@ -343,6 +352,7 @@ def main(cfg: DictConfig) -> None:
         raise ValueError(f"No model checkpoint found in {exp_dir}")
     
     test_evaluator.evaluate(decoder, "test_model", model_ckpt_path)
+
 
     if cfg.use_wandb and rank == 0:
         wandb.finish()

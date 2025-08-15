@@ -1,0 +1,38 @@
+# @package _global_
+
+defaults:
+  - /dataset: fivebillionpixels
+  - /encoder: remoteclip
+  - /decoder: seg_upernet #for unet must train encoder
+  - /preprocessing: seg_default
+  - /criterion: cross_entropy
+  - /task: segmentation
+  - _self_
+  
+
+train: false
+finetune: false #freezes decoder
+batch_size: 8
+test_batch_size: 1
+
+dataset: 
+  img_size: 520
+  root_path: '/cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/'
+
+encoder: 
+  encoder_weights: ./pretrained_models/RemoteCLIP-ViT-B-32.pt
+  download_url: https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt
+
+
+
+ckpt_dir: logs/(best)20250813_194812_remoteclip_seg_upernet_fivebillionpixels_24cd35
+
+task:
+  evaluator:
+    inference_mode: whole #instead of sliding, should use cropped images
+
+
+
+num_workers: 4
+test_num_workers: 4
+

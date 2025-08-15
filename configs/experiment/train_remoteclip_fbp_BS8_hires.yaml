@@ -1,0 +1,37 @@
+# @package _global_
+### triaing remoteclip on FBP (requires 2 * 22GB GPU)
+
+defaults:
+  - /dataset: fivebillionpixels
+  - /encoder: remoteclip
+  - /decoder: seg_upernet #for unet must train encoder
+  - /preprocessing: seg_default
+  - /criterion: cross_entropy
+  - /task: segmentation
+  - _self_
+  
+
+train: true
+finetune: false #freezes decoder
+batch_size: 8
+test_batch_size: 1
+
+dataset: 
+  img_size: 520
+  root_path: '/cluster/work/igp_psr/iyakushevsky/GFMdistill/data/FBP_full/'
+
+encoder: 
+  encoder_weights: ./pretrained_models/RemoteCLIP-ViT-B-32.pt
+  download_url: https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt
+
+
+task:
+  evaluator:
+    inference_mode: whole #instead of sliding, should use cropped images
+
+optimizer:
+  lr: 4e-4
+
+num_workers: 4
+test_num_workers: 4
+
