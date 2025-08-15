@@ -1,0 +1,56 @@
+# @package _global_
+### triaing remoteclip on FBP (requires 2 * 22GB GPU)
+
+defaults:
+  - /dataset: RSITMD
+  - /encoder: remoteclip
+  - /decoder: linearclassifier
+  - /preprocessing: classification 
+  - /criterion: cross_entropy
+  - /task: linear_classification
+  - _self_
+  
+
+train: true
+finetune: true 
+batch_size: 4
+test_batch_size: 4
+
+encoder: 
+  encoder_weights: false #initialise from scratch!! 
+  embed_dim: 512
+  input_size: 224
+  layers: 6
+  width: 512
+  head_width: 64
+  patch_size: 32
+  mlp_ratio: 2.0
+
+  input_bands:
+    optical:
+      - B4
+      - B3
+      - B2
+
+
+  output_layers:
+    - 3
+    - 4
+    - 5
+
+  output_dim: 512
+
+task:
+  evaluator:
+    inference_mode: whole #instead of sliding, should use cropped images
+    #sliding_inference_batch: 1
+  trainer: 
+    precision: fp32
+
+
+num_workers: 4
+test_num_workers: 4
+
+
+optimizer:
+  lr: 3e-4

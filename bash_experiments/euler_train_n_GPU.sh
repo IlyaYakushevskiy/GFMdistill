@@ -31,6 +31,6 @@ EOF
 
 cd /cluster/work/igp_psr/iyakushevsky/GFMdistill
 
-torchrun --nproc_per_node=2 main.py +experiment=train_remoteclip_RSITMD
+torchrun --nproc_per_node=2 main.py +experiment=train_remoteclip_RSITMD_small
 
 echo "=== Job finished at $(date) ==="
