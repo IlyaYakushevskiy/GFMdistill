@@ -63,9 +63,50 @@ class DistillFeaturesLoss(torch.nn.Module):
         self.ignore_index = ignore_index
 
 class DistillLogitLoss(torch.nn.Module):
-    def __init__(self, ignore_index: int) -> None:
-        super(DistillLogitLoss, self).__init__()
-        self.ignore_index = ignore_index
 
-    #def forward(self, logits, target, logits_teacher): 
+    """L_total = α * L_hard + (1 - α) * L_soft"""
+    
+    def __init__(self, hard_loss_fn: nn.Module, alpha: float, temperature: float):
+        """Args:
+        hard_loss_fn (nn.Module): The loss function for the hard labels (e.g., WeightedCrossEntropy).
+        alpha (float): The weighting factor for the hard loss. Must be between 0 and 1.
+        temperature (float): The temperature for softening the logits. Higher values create a softer
+                                probability distribution."""
+
+        super(DistillLogitLoss, self).__init__()
+
+        if not (0 <= alpha <= 1):
+            raise ValueError("alpha must be between 0 and 1.")
+            
+        self.hard_loss_fn = hard_loss_fn
+        self.soft_loss_fn = nn.KLDivLoss(reduction='batchmean')
+        self.alpha = alpha
+        self.temperature = temperature
+
+    def forward(self, student_logits: torch.Tensor, target: torch.Tensor, teacher_logits: torch.Tensor) -> torch.Tensor:
+        """
+        Calculates the total distillation loss.
+
+        Args:
+            student_logits (torch.Tensor): The output logits from the student model.
+            target (torch.Tensor): The ground truth labels.
+            teacher_logits (torch.Tensor): The output logits from the teacher model.
+
+        Returns:
+            torch.Tensor: The final combined loss.
+        """
+        loss_hard = self.hard_loss_fn(student_logits, target)
+
+        
+        soft_student_logits = F.log_softmax(student_logits / self.temperature, dim=1)
+        soft_teacher_targets = F.softmax(teacher_logits / self.temperature, dim=1)
+
+        # KLDivLoss expects log-probabilities for the input and probabilities for the target
+        # The gradients from the soft loss are scaled by 1/T^2, so we multiply by T^2 to
+        # ensure the relative contribution of the hard and soft loss is controlled by alpha.
+        loss_soft = self.soft_loss_fn(soft_student_logits, soft_teacher_targets) * (self.temperature ** 2)
+
+        loss_total = self.alpha * loss_hard + (1 - self.alpha) * loss_soft
+        
+        return loss_total
          

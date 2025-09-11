@@ -1,0 +1,34 @@
+# @package _global_
+
+defaults:
+  - /dataset: RSITMD
+  - /encoder: remoteclip
+  - /decoder: linearclassifier
+  - /preprocessing: classification
+  - /criterion: cross_entropy
+  - /task: linear_classification
+  - _self_
+  
+
+train: false
+finetune: false #freezes decoder
+batch_size: 8
+test_batch_size: 1
+
+
+encoder: 
+  encoder_weights: ./pretrained_models/RemoteCLIP-ViT-B-32.pt
+  download_url: https://huggingface.co/chendelong/RemoteCLIP/resolve/main/RemoteCLIP-ViT-B-32.pt
+
+
+ckpt_dir: logs/(best)20250815_111136_remoteclip_linearclassifier_RSITMD_126cf6
+
+task:
+  evaluator:
+    inference_mode: whole #instead of sliding, should use cropped images
+
+
+
+num_workers: 4
+test_num_workers: 4
+

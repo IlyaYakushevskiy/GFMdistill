@@ -69,22 +69,24 @@ def main(cfg: DictConfig) -> None:
     """
     # fix all random seeds
     fix_seed(cfg.seed)
-    # distributed training variables
-    # rank = cfg.rank
-    # local_rank = int(cfg.local_rank)
 
 
-    # device = torch.device("cuda", local_rank)
-
-    local_rank = int(os.environ["LOCAL_RANK"])
-    rank = int(os.environ["RANK"])
-    torch.distributed.init_process_group(backend="nccl")
-    torch.cuda.set_device(local_rank)
-    device = torch.device("cuda", local_rank)
-
-
-    # torch.cuda.set_device(device)
-    # torch.distributed.init_process_group(backend="nccl")
+    # Detect if the script is launched with `torchrun`
+    if "RANK" in os.environ and "WORLD_SIZE" in os.environ:
+        is_distributed = True
+        local_rank = int(os.environ["LOCAL_RANK"])
+        rank = int(os.environ["RANK"])
+        world_size = int(os.environ['WORLD_SIZE'])
+        
+        torch.distributed.init_process_group(backend="nccl")
+        torch.cuda.set_device(local_rank)
+        device = torch.device("cuda", local_rank)
+    else:
+        # This is a single-GPU run, launched with `python`
+        is_distributed = False
+        rank = 0
+        local_rank = 0
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # true if training else false
     train_run = cfg.train
@@ -114,9 +116,6 @@ def main(cfg: DictConfig) -> None:
         exp_dir = pathlib.Path(cfg.ckpt_dir)
         exp_name = exp_dir.name
         logger_path = exp_dir / "test.log"
-        # load training config
-        #cfg_path = exp_dir / "configs" / "config.yaml" ####always evaluate with new config 
-        #cfg = OmegaConf.load(cfg_path)
         if cfg.task.trainer.use_wandb and rank == 0:
             import wandb
 
@@ -135,6 +134,26 @@ def main(cfg: DictConfig) -> None:
     logger.info("The experiment is stored in %s\n" % exp_dir)
     logger.info(f"Device used: {device}")
 
+    ###block for distilation, initalising teacher 
+
+    teacher_model = None
+    if "teacher_ckpt_dir" in cfg:
+        logger.info("--- Loading Teacher Model for Distillation ---")
+        
+        teacher_encoder = instantiate(cfg.teacher_encoder)
+        teacher_decoder = instantiate(cfg.decoder, encoder=teacher_encoder)
+        
+        teacher_ckpt = torch.load(cfg.teacher_ckpt_dir, map_location='cpu')
+        teacher_decoder.load_state_dict(teacher_ckpt['model'])
+        logger.info(f"Loaded teacher weights from {cfg.teacher_ckpt_dir}")
+
+        teacher_model = teacher_decoder
+
+
+    
+
+
+
     encoder: Encoder = instantiate(cfg.encoder)
     if cfg.encoder.encoder_weights:
         encoder.load_encoder_weights(logger)
@@ -146,54 +165,29 @@ def main(cfg: DictConfig) -> None:
         encoder=encoder,
     )
     decoder.to(device)
-    decoder = torch.nn.parallel.DistributedDataParallel(
-        decoder,
-        device_ids=[local_rank],
-        output_device=local_rank,
-        find_unused_parameters=cfg.finetune,
-    )
-    logger.info(
-        "Built {} for with {} encoder.".format(
-            decoder.module.model_name, type(encoder).__name__
+    if is_distributed:
+        decoder = torch.nn.parallel.DistributedDataParallel(
+            decoder,
+            device_ids=[local_rank],
+            output_device=local_rank,
+            find_unused_parameters=cfg.finetune,
         )
-    )
-
+    
     if rank == 0:
-        # Calculate complexity on the underlying model, not the DDP wrapper
-        model_to_analyze = decoder.module
-
-        # --- Calculate Trainable Parameters ---
+        model_to_analyze = decoder.module if is_distributed else decoder
         params_in_M = sum(p.numel() for p in model_to_analyze.parameters() if p.requires_grad) / 1e6
         logger.info(f"Model Trainable Parameters: {params_in_M:.3f}M")
-
-        # --- Calculate GMACs ---
-        # Create a dummy input tensor that matches the model's forward pass signature.
-        # The decoder expects a 5D tensor (B, C, T, H, W) in a dictionary.
         try:
-            # Assuming a single modality for simplicity in this example.
-            # You might need to adjust this if your model takes multiple modalities.
             modality_key = list(encoder.input_bands.keys())[0]
             num_input_channels = len(encoder.input_bands[modality_key])
-            
-            dummy_tensor = torch.randn(
-                1,  # Batch size
-                num_input_channels,
-                1,  # Time dimension
-                cfg.dataset.img_size,
-                cfg.dataset.img_size,
-            ).to(device)
-            
+            dummy_tensor = torch.randn(1, num_input_channels, 1, cfg.dataset.img_size, cfg.dataset.img_size).to(device)
             dummy_input = {modality_key: dummy_tensor}
-            
             flop_analyzer = FlopCountAnalysis(model_to_analyze, dummy_input)
             gmacs = flop_analyzer.total() / 1e9
             logger.info(f"Model GMACs: {gmacs:.3f} (for input size {dummy_tensor.shape})")
-
         except Exception as e:
-            gmacs = -1 # Assign a sentinel value if calculation fails
+            gmacs = -1
             logger.warning(f"Could not calculate GMACs due to an error: {e}")
-
-        # --- Log to W&B ---
         if cfg.task.trainer.use_wandb:
             import wandb
             wandb.summary["parameters_M"] = params_in_M
@@ -202,73 +196,43 @@ def main(cfg: DictConfig) -> None:
     modalities = list(encoder.input_bands.keys())
     collate_fn = get_collate_fn(modalities)
 
-    # training
-
-    torch.cuda.empty_cache() ### clear cache before training
+    torch.cuda.empty_cache()
 
     if train_run or cfg.task.trainer.model == "knn_probe":
-        # get preprocessor
-        train_preprocessor = instantiate(
-            cfg.preprocessing.train,
-            dataset_cfg=cfg.dataset,
-            encoder_cfg=cfg.encoder,
-            _recursive_=False,
-        )
-        val_preprocessor = instantiate(
-            cfg.preprocessing.val,
-            dataset_cfg=cfg.dataset,
-            encoder_cfg=cfg.encoder,
-            _recursive_=False,
-        )
+        train_preprocessor = instantiate(cfg.preprocessing.train, dataset_cfg=cfg.dataset, encoder_cfg=cfg.encoder, _recursive_=False)
+        val_preprocessor = instantiate(cfg.preprocessing.val, dataset_cfg=cfg.dataset, encoder_cfg=cfg.encoder, _recursive_=False)
 
-        # get datasets
         raw_train_dataset: RawGeoFMDataset = instantiate(cfg.dataset, split="train")
         raw_val_dataset: RawGeoFMDataset = instantiate(cfg.dataset, split="val")
 
         if 0 < cfg.limited_label_train < 1:
-            indices = get_subset_indices(
-                raw_train_dataset,
-                task=task_name,
-                strategy=cfg.limited_label_strategy,
-                label_fraction=cfg.limited_label_train,
-                num_bins=cfg.stratification_bins,
-                logger=logger,
-            )
+            indices = get_subset_indices(raw_train_dataset, task=task_name, strategy=cfg.limited_label_strategy, label_fraction=cfg.limited_label_train, num_bins=cfg.stratification_bins, logger=logger)
             raw_train_dataset = GeoFMSubset(raw_train_dataset, indices)
-
         if 0 < cfg.limited_label_val < 1:
-            indices = get_subset_indices(
-                raw_val_dataset,
-                task=task_name,
-                strategy=cfg.limited_label_strategy,
-                label_fraction=cfg.limited_label_val,
-                num_bins=cfg.stratification_bins,
-                logger=logger,
-            )
+            indices = get_subset_indices(raw_val_dataset, task=task_name, strategy=cfg.limited_label_strategy, label_fraction=cfg.limited_label_val, num_bins=cfg.stratification_bins, logger=logger)
             raw_val_dataset = GeoFMSubset(raw_val_dataset, indices)
 
-        train_dataset = GeoFMDataset(
-            raw_train_dataset, train_preprocessor, cfg.data_replicate
-        )
-        val_dataset = GeoFMDataset(
-            raw_val_dataset, val_preprocessor, cfg.data_replicate
-        )
+        train_dataset = GeoFMDataset(raw_train_dataset, train_preprocessor, cfg.data_replicate)
+        val_dataset = GeoFMDataset(raw_val_dataset, val_preprocessor, cfg.data_replicate)
 
         logger.info("Built {} dataset.".format(cfg.dataset.dataset_name))
+        logger.info(f"Total number of train patches: {len(train_dataset)}\nTotal number of validation patches: {len(val_dataset)}\n")
 
-        logger.info(
-            f"Total number of train patches: {len(train_dataset)}\n"
-            f"Total number of validation patches: {len(val_dataset)}\n"
-        )
+        # --- CORRECTED: Sampler creation logic ---
+        if is_distributed:
+            train_sampler = DistributedSampler(train_dataset, shuffle=True)
+            val_sampler = DistributedSampler(val_dataset, shuffle=False)
+        else:
+            train_sampler = None
+            val_sampler = None
 
-        # get train val data loaders
         train_loader = DataLoader(
             train_dataset,
-            sampler=DistributedSampler(train_dataset),
+            # --- FIX: Pass the sampler object, not a boolean ---
+            sampler=train_sampler,
             batch_size=cfg.batch_size,
             num_workers=cfg.num_workers,
             pin_memory=True,
-            # persistent_workers=True causes memory leak
             persistent_workers=False,
             worker_init_fn=seed_worker,
             generator=get_generator(cfg.seed),
@@ -278,13 +242,14 @@ def main(cfg: DictConfig) -> None:
 
         val_loader = DataLoader(
             val_dataset,
-            sampler=DistributedSampler(val_dataset),
+            sampler=val_sampler,
             batch_size=cfg.test_batch_size,
             num_workers=cfg.test_num_workers,
             pin_memory=True,
             persistent_workers=False,
             worker_init_fn=seed_worker,
-            # generator=g,
+            # --- CORRECTED: `drop_last` should be False for evaluation to test on all data. ---
+            # Your evaluator's `all_reduce` handles cases with uneven batches across GPUs.
             drop_last=False,
             collate_fn=collate_fn,
         )
@@ -297,11 +262,10 @@ def main(cfg: DictConfig) -> None:
             total_iters=len(train_loader) * cfg.task.trainer.n_epochs,
         )
 
-        val_evaluator: Evaluator = instantiate(
-            cfg.task.evaluator, val_loader=val_loader, exp_dir=exp_dir, device=device
-        )
+        val_evaluator: Evaluator = instantiate(cfg.task.evaluator, val_loader=val_loader, exp_dir=exp_dir, device=device)
         trainer: Trainer = instantiate(
             cfg.task.trainer,
+            teacher_model=teacher_model,
             model=decoder,
             train_loader=train_loader,
             lr_scheduler=lr_scheduler,
@@ -311,28 +275,23 @@ def main(cfg: DictConfig) -> None:
             exp_dir=exp_dir,
             device=device,
         )
-        # resume training if model_checkpoint is provided
         if cfg.ckpt_dir is not None:
             trainer.load_model(cfg.ckpt_dir)
-
         trainer.train()
 
-    
     # Evaluation
-    test_preprocessor = instantiate(
-        cfg.preprocessing.test,
-        dataset_cfg=cfg.dataset,
-        encoder_cfg=cfg.encoder,
-        _recursive_=False,
-    )
-
-    # get datasets
+    test_preprocessor = instantiate(cfg.preprocessing.test, dataset_cfg=cfg.dataset, encoder_cfg=cfg.encoder, _recursive_=False)
     raw_test_dataset: RawGeoFMDataset = instantiate(cfg.dataset, split="test")
     test_dataset = GeoFMDataset(raw_test_dataset, test_preprocessor)
 
+    if is_distributed:
+        test_sampler = DistributedSampler(test_dataset, shuffle=False)
+    else:
+        test_sampler = None
+
     test_loader = DataLoader(
         test_dataset,
-        sampler=DistributedSampler(test_dataset),
+        sampler=test_sampler, # Use the conditionally created sampler
         batch_size=cfg.test_batch_size,
         num_workers=cfg.test_num_workers,
         pin_memory=True,
@@ -340,9 +299,7 @@ def main(cfg: DictConfig) -> None:
         drop_last=False,
         collate_fn=collate_fn,
     )
-    test_evaluator: Evaluator = instantiate(
-        cfg.task.evaluator, val_loader=test_loader, exp_dir=exp_dir, device=device
-    )
+    test_evaluator: Evaluator = instantiate(cfg.task.evaluator, val_loader=test_loader, exp_dir=exp_dir, device=device)
 
     if cfg.use_final_ckpt:
         model_ckpt_path = get_final_model_ckpt_path(exp_dir)
@@ -354,8 +311,8 @@ def main(cfg: DictConfig) -> None:
     
     test_evaluator.evaluate(decoder, "test_model", model_ckpt_path)
 
-
     if cfg.use_wandb and rank == 0:
+        import wandb
         wandb.finish()
 
 

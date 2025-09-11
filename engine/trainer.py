@@ -104,6 +104,7 @@ class Trainer:
             # train the network for one epoch
             if epoch % self.eval_interval == 0:
                 metrics, used_time = self.evaluator(self.model, f"epoch {epoch}")
+                torch.distributed.barrier() ###trying to fix distrib problems 
                 self.training_stats["eval_time"].update(used_time)
                 self.save_best_checkpoint(metrics, epoch)
 

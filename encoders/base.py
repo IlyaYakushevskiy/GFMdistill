@@ -170,6 +170,7 @@ class Encoder(nn.Module):
         raise NotImplementedError
 
     def download_model(self) -> None:
+        
         """Download the model if the weights are not already downloaded."""
         if self.download_url and not os.path.isfile(self.encoder_weights):
             # TODO: change this path
@@ -194,3 +195,4 @@ class Encoder(nn.Module):
                 except urllib.error.URLError as e:
                     print("Error while downloading model: Failed to reach a server.")
                     print("Reason: ", e.reason)
+
