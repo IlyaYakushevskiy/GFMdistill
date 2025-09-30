@@ -8,7 +8,7 @@ trainer:
   evaluator: null
   exp_dir: null
   device: null
-  criterion: null
+  #criterion: null
 
   # params to adapt
   n_epochs: 50

@@ -1,5 +1,6 @@
 import torch
 from torch.nn import functional as F
+import torch.nn as nn 
 
 
 class WeightedCrossEntropy(torch.nn.Module):

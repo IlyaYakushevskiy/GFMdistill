@@ -8,8 +8,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=4G
 #SBATCH --time 3:00:00
-#SBATCH -o job_output/train_rc_RSITMD_2GPU%j.out
-#SBATCH -e job_output/train_rc_RSITMD__2GPU%j.err
+#SBATCH -o job_output/train_rc_RSITMD_distill%j.out
+#SBATCH -e job_output/train_rc_RSITMD__distill%j.err
 
 echo "=== Job starting on $(hostname) at $(date) ==="
 echo "=== SLURM_PROCID: $SLURM_PROCID, SLURM_LOCALID: $SLURM_LOCALID, CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES ==="

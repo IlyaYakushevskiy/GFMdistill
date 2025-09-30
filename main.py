@@ -28,6 +28,7 @@ from utils.utils import (
     get_final_model_ckpt_path,
     get_generator,
     seed_worker,
+    load_teacher_model
 )
 
 
@@ -137,18 +138,16 @@ def main(cfg: DictConfig) -> None:
     ###block for distilation, initalising teacher 
 
     teacher_model = None
-    if "teacher_ckpt_dir" in cfg:
-        logger.info("--- Loading Teacher Model for Distillation ---")
-        
-        teacher_encoder = instantiate(cfg.teacher_encoder)
-        teacher_decoder = instantiate(cfg.decoder, encoder=teacher_encoder)
-        
-        teacher_ckpt = torch.load(cfg.teacher_ckpt_dir, map_location='cpu')
-        teacher_decoder.load_state_dict(teacher_ckpt['model'])
-        logger.info(f"Loaded teacher weights from {cfg.teacher_ckpt_dir}")
+    if "teacher_ckpt_dir" in cfg and cfg.teacher_ckpt_dir is not None:
+        teacher_model = load_teacher_model(
+            encoder_cfg=cfg.teacher_encoder,
+            decoder_cfg=cfg.decoder,
+            ckpt_dir=cfg.teacher_ckpt_dir,
+            logger=logger
+        )
 
-        teacher_model = teacher_decoder
-
+        teacher_model.to(device)
+        teacher_model.eval()
 
     
 
@@ -285,6 +284,8 @@ def main(cfg: DictConfig) -> None:
     test_dataset = GeoFMDataset(raw_test_dataset, test_preprocessor)
 
     if is_distributed:
+
+        
         test_sampler = DistributedSampler(test_dataset, shuffle=False)
     else:
         test_sampler = None

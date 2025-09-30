@@ -1,0 +1,7 @@
+_target_: utils.losses.DistillLogitLoss
+hard_loss_fn:
+  _target_: utils.losses.WeightedCrossEntropy
+  ignore_index: ${dataset.ignore_index}
+  distribution: ${dataset.distribution}
+alpha: 0.3
+temperature: 4.0

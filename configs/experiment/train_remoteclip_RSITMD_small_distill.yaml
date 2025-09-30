@@ -4,16 +4,15 @@
 
 defaults:
   - /dataset: RSITMD
-  - /encoder: remoteclip
+  - /encoder: remoteclip 
   - /decoder: linearclassifier
   - /preprocessing: classification 
-  - /criterion: cross_entropy
+  - /criterion: distillation
   - /task: linear_classification_distill
   - _self_
   
-teacher_ckpt_dir : logs/(best)20250815_111136_remoteclip_linearclassifier_RSITMD_126cf6 ##TODO 
-teacher_task: linear_classification 
-teacher_encoder: remoteclip_teacher
+teacher_ckpt_dir : logs/(best)20250815_111136_remoteclip_linearclassifier_RSITMD_126cf6
+
 
 train: true
 finetune: true 
@@ -23,14 +22,17 @@ test_batch_size: 2
 criterion: 
   _target_: utils.losses.DistillLogitLoss
   hard_loss_fn:
-      _target_: losses.WeightedCrossEntropy ###TO CHECK
+      _target_: utils.losses.WeightedCrossEntropy
       ignore_index: ${dataset.ignore_index}
       distribution: ${dataset.distribution}
   alpha: 0.3  # 30% weight on hard loss, 70% on soft loss
   temperature: 4.0 
 
+# === STUDENT MODEL CONFIGURATION ===
 encoder: 
+  _target_: encoders.remoteclip_encoder.RemoteCLIP_Encoder
   encoder_weights: false #initialise from scratch!! 
+  download_url: false   
   embed_dim: 512
   input_size: 224
   layers: 6
@@ -38,7 +40,6 @@ encoder:
   head_width: 64
   patch_size: 32
   mlp_ratio: 2.0
-  download_url: false
 
   input_bands:
     optical:
@@ -54,6 +55,35 @@ encoder:
 
   output_dim: 512
 
+
+# === TEACHER MODEL CONFIGURATION ===
+#teacher_encoder: remoteclip_teacher
+teacher_encoder: 
+  _target_: encoders.remoteclip_encoder.RemoteCLIP_Encoder
+  encoder_weights: false 
+  download_url: false
+  embed_dim: 768
+  input_size: 224
+  layers: 12
+  width: 768
+  head_width: 64
+  patch_size: 32
+  mlp_ratio: 4.0
+
+  input_bands:
+    optical:
+      - B4
+      - B3
+      - B2
+
+
+  output_layers:
+    - 3
+    - 5
+    - 7
+    - 11
+
+  output_dim: 768
 task:
   evaluator:
     inference_mode: whole #instead of sliding, should use cropped images
