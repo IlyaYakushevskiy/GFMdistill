@@ -47,7 +47,7 @@ class RSITMD(RawGeoFMDataset):
 
     def _load_samples(self):
         """Parses the JSON file to find all images and labels for the current split."""
-        # Use Path for robust path handling
+        # Use Path for robust path handling (e.g. works for mac / windows the same) 
         root_path = Path(self.root_path)
         json_path = root_path / self.json_filename
         images_dir = root_path / "images"
@@ -61,7 +61,7 @@ class RSITMD(RawGeoFMDataset):
             data = json.load(f)
             
         for image_info in data["images"]:
-            # This is the core logic. Check if the entry's split matches the one we want.
+            
             if image_info["split"] == self.split:
                 filename = image_info["filename"]
                 class_name = filename.split('_')[0]

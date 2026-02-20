@@ -42,7 +42,7 @@ class LinearClassifier(Decoder):
             for param in self.encoder.parameters():
                 param.requires_grad = False
 
-        self.input_layers = self.encoder.output_layers
+        self.input_layers = self.encoder.output_layers #last layer of params are embeddings 
         self.input_layers_num = len(self.input_layers)
 
         if in_channels is None:
@@ -92,7 +92,7 @@ class LinearClassifier(Decoder):
 
             # multi_temporal models can return either (B C' T=1 H' W')
             # or (B C' H' W'), we need (B C' H' W')
-            if self.encoder.multi_temporal_output:
+            if tiself.encoder.mul_temporal_output:
                 feat = [f.squeeze(-3) for f in feat]
 
         else:

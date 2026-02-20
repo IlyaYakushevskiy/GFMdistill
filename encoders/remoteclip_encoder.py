@@ -106,7 +106,7 @@ class Attention(nn.Module):
         self.scale_heads = scale_heads
         assert dim % num_heads == 0, "dim should be divisible by num_heads"
         self.num_heads = num_heads
-        self.head_dim = dim // num_heads
+        self.head_dim = dim // num_heads # // floor division 
         self.scale = self.head_dim**-0.5
         self.logit_scale_max = logit_scale_max
         self.use_fsdpa = hasattr(nn.functional, "scaled_dot_product_attention")
@@ -341,7 +341,7 @@ class RemoteCLIP_Encoder(Encoder):
 
     def __init__(
         self,
-        encoder_weights: str | Path,
+        encoder_weights: str | Path, #new union feature, either str of Path 
         input_bands: dict[str, list[str]],
         input_size: int,
         embed_dim: int,

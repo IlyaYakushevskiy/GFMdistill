@@ -1,0 +1,257 @@
+
+Modules based on Lua: Version 8.7.24  2023-05-04 15:12 -05:00
+    by Robert McLay mclay@tacc.utexas.edu
+
+module [options] sub-command [args ...]
+
+Help sub-commands:
+------------------
+  help                              prints this message
+  help                module [...]  print help message from module(s)
+
+Loading/Unloading sub-commands:
+-------------------------------
+  load | add          module [...]  load module(s)
+  try-load | try-add  module [...]  Add module(s), do not complain if not
+                                    found
+  del | unload        module [...]  Remove module(s), do not complain if not
+                                    found
+  swap | sw | switch  m1 m2         unload m1 and load m2
+  purge                             unload all modules
+  refresh                           reload aliases from current list of
+                                    modules.
+  update                            reload all currently loaded modules.
+
+Listing / Searching sub-commands:
+---------------------------------
+  list                              List loaded modules
+  list                s1 s2 ...     List loaded modules that match the
+                                    pattern
+  avail | av                        List available modules
+  avail | av          string        List available modules that contain
+                                    "string".
+  category | cat                    List all categories
+  category | cat      s1 s2 ...     List all categories that match the
+                                    pattern and display their modules
+  overview | ov                     List all available modules by short
+                                    names with number of versions
+  overview | ov       string        List available modules by short names
+                                    with number of versions that contain
+                                    "string"
+  spider                            List all possible modules
+  spider              module        List all possible version of that module
+                                    file
+  spider              string        List all module that contain the
+                                    "string".
+  spider              name/version  Detailed information about that version
+                                    of the module.
+  whatis              module        Print whatis information about module
+  keyword | key       string        Search all name and whatis that contain
+                                    "string".
+
+Searching with Lmod:
+--------------------
+  All searching (spider, list, avail, keyword) support regular expressions:
+  
+
+  -r spider           '^p'          Finds all the modules that start with
+                                    `p' or `P'
+  -r spider           mpi           Finds all modules that have "mpi" in
+                                    their name.
+  -r spider           'mpi$         Finds all modules that end with "mpi" in
+                                    their name.
+
+Handling a collection of modules:
+--------------------------------
+  save | s                          Save the current list of modules to a
+                                    user defined "default" collection.
+  save | s            name          Save the current list of modules to
+                                    "name" collection.
+  reset                             The same as "restore system"
+  restore | r                       Restore modules from the user's
+                                    "default" or system default.
+  restore | r         name          Restore modules from "name" collection.
+  restore             system        Restore module state to system defaults.
+  savelist                          List of saved collections.
+  describe | mcc      name          Describe the contents of a module
+                                    collection.
+  disable             name          Disable (i.e. remove) a collection.
+
+Deprecated commands:
+--------------------
+  getdefault          [name]        load name collection of modules or
+                                    user's "default" if no name given.
+                                    ===> Use "restore" instead <====
+  setdefault          [name]        Save current list of modules to name if
+                                    given, otherwise save as the default
+                                    list for you the user.
+                                    ===> Use "save" instead. <====
+
+Miscellaneous sub-commands:
+---------------------------
+  is-loaded           modulefile    return a true status if module is loaded
+  is-avail            modulefile    return a true status if module can be
+                                    loaded
+  show                modulefile    show the commands in the module file.
+  use [-a]            path          Prepend or Append path to MODULEPATH.
+  unuse               path          remove path from MODULEPATH.
+  tablelist                         output list of active modules as a lua
+                                    table.
+
+Important Environment Variables:
+--------------------------------
+  LMOD_COLORIZE                     If defined to be "YES" then Lmod prints
+                                    properties and warning in color.
+
+    --------------------------------------------------------------------------
+
+Lmod Web Sites
+
+  Documentation:    https://lmod.readthedocs.org
+  GitHub:           https://github.com/TACC/Lmod
+  SourceForge:      https://lmod.sf.net
+  TACC Homepage:    https://www.tacc.utexas.edu/research-development/tacc-projects/lmod
+
+  To report a bug please read https://lmod.readthedocs.io/en/latest/075_bug_reporting.html
+    --------------------------------------------------------------------------
+
+
+wandb: Currently logged in as: ilyay to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /cluster/work/igp_psr/iyakushevsky/GFMdistill/wandb/run-20260216_201258-0maa99i9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run (best)20250815_111136_remoteclip_linearclassifier_RSITMD_126cf6
+wandb: ⭐️ View project at https://wandb.ai/ilyay/geofm-bench
+wandb: 🚀 View run at https://wandb.ai/ilyay/geofm-bench/runs/0maa99i9
+INFO - 02/16/26 20:13:01 - 0:00:00 - ============ Initialized logger ============
+INFO - 02/16/26 20:13:01 - 0:00:00 - 'batch_size': 8,
+                                      'ckpt_dir': 'logs/(best)20250815_111136_remoteclip_linearclassifier_RSITMD_126cf6',
+                                      'criterion': {'_target_': 'torch.nn.CrossEntropyLoss',
+                                                    'ignore_index': '${dataset.ignore_index}'},
+                                      'data_replicate': 1,
+                                      'dataset': {'_target_': 'data_loaders.rsitmd.RSITMD',
+                                                  'auto_download': False,
+                                                  'bands': {'optical': ['B1', 'B2', 'B3']},
+                                                  'classes': ['airport', 'bareland', 'baseballfield', 'beach',
+                                                              'boat', 'bridge', 'center', 'church', 'commercial',
+                                                              'denseresidential', 'desert', 'farmland', 'forest',
+                                                              'industrial', 'intersection', 'meadow',
+                                                              'mediumresidential', 'mountain', 'park', 'parking',
+                                                              'plane', 'playground', 'pond', 'port',
+                                                              'railwaystation', 'resort', 'river', 'school',
+                                                              'sparseresidential', 'square', 'stadium',
+                                                              'storagetanks', 'viaduct'],
+                                                  'data_max': {'optical': [1.0, 1.0, 1.0]},
+                                                  'data_mean': {'optical': [0.399477, 0.410661, 0.371083]},
+                                                  'data_min': {'optical': [0.0, 0.0, 0.0]},
+                                                  'data_std': {'optical': [0.217282, 0.195615, 0.19377]},
+                                                  'dataset_name': 'RSITMD',
+                                                  'distribution': [134, 58, 105, 154, 15, 155, 146, 136, 148, 157,
+                                                                   126, 177, 116, 207, 17, 127, 130, 109, 160, 143,
+                                                                   6, 191, 224, 178, 112, 166, 188, 165, 157, 196,
+                                                                   201, 251, 188],
+                                                  'download_url': False,
+                                                  'ignore_index': -100,
+                                                  'img_size': 256,
+                                                  'json_filename': 'dataset_RSITMD_split.json',
+                                                  'multi_modal': False,
+                                                  'multi_temporal': False,
+                                                  'num_classes': 33,
+                                                  'root_path': './data/RSITMD',
+                                                  'use_cmyk': False},
+                                      'decoder': {'_target_': 'decoders.linearclassifier.LinearClassifier',
+                                                  'encoder': None,
+                                                  'finetune': '${finetune}',
+                                                  'num_classes': '${dataset.num_classes}'},
+                                      'encoder': {'_target_': 'encoders.remoteclip_encoder.RemoteCLIP_Encoder',
+                                                  'download_url': 'None',
+                                                  'embed_dim': 768,
+                                                  'encoder_weights': './pretrained_models/RemoteCLIP-ViT-B-32.pt',
+                                                  'head_width': 64,
+                                                  'input_bands': {'optical': ['B4', 'B3', 'B2']},
+                                                  'input_size': 224,
+                                                  'layers': 12,
+                                                  'mlp_ratio': 4.0,
+                                                  'output_dim': 768,
+                                                  'output_layers': [3, 5, 7, 11],
+                                                  'patch_size': 32,
+                                                  'width': 768},
+                                      'finetune': False,
+                                      'limited_label_strategy': 'stratified',
+                                      'limited_label_train': 1,
+                                      'limited_label_val': 1,
+                                      'lr_scheduler': {'_target_': 'utils.schedulers.MultiStepLR',
+                                                       'lr_milestones': [0.6, 0.9],
+                                                       'optimizer': None,
+                                                       'total_iters': None},
+                                      'num_workers': 4,
+                                      'optimizer': {'_target_': 'torch.optim.AdamW',
+                                                    'betas': [0.9, 0.999],
+                                                    'lr': 0.0001,
+                                                    'params': None,
+                                                    'weight_decay': 0.05},
+                                      'preprocessing': {'test': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                 'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                      {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                      {'_target_': 'engine.data_preprocessor.BandPadding'}]},
+                                                        'train': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                  'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                       {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                       {'_target_': 'engine.data_preprocessor.BandPadding'}]},
+                                                        'val': {'_target_': 'engine.data_preprocessor.Preprocessor',
+                                                                'preprocessor_cfg': [{'_target_': 'engine.data_preprocessor.BandFilter'},
+                                                                                     {'_target_': 'engine.data_preprocessor.NormalizeMeanStd'},
+                                                                                     {'_target_': 'engine.data_preprocessor.BandPadding'}]}},
+                                      'seed': 234,
+                                      'stratification_bins': 3,
+                                      'task': {'evaluator': {'_target_': 'engine.evaluator.LinearClassificationEvaluator',
+                                                             'device': None,
+                                                             'exp_dir': None,
+                                                             'inference_mode': 'whole',
+                                                             'sliding_inference_batch': None,
+                                                             'use_wandb': '${use_wandb}',
+                                                             'val_loader': None},
+                                               'trainer': {'_target_': 'engine.trainer.LinearClassificationTrainer',
+                                                           'best_metric_key': 'accuracy',
+                                                           'ckpt_interval': 50,
+                                                           'device': None,
+                                                           'eval_interval': 5,
+                                                           'evaluator': None,
+                                                           'exp_dir': None,
+                                                           'log_interval': 5,
+                                                           'lr_scheduler': None,
+                                                           'model': None,
+                                                           'n_epochs': 50,
+                                                           'optimizer': None,
+                                                           'precision': 'fp32',
+                                                           'train_loader': None,
+                                                           'use_wandb': '${use_wandb}'}},
+                                      'test_batch_size': 1,
+                                      'test_num_workers': 4,
+                                      'train': False,
+                                      'use_final_ckpt': False,
+                                      'use_wandb': True,
+                                      'wandb_run_id': None,
+                                      'work_dir': ''
+INFO - 02/16/26 20:13:01 - 0:00:00 - The experiment is stored in logs/(best)20250815_111136_remoteclip_linearclassifier_RSITMD_126cf6
+                                     
+INFO - 02/16/26 20:13:01 - 0:00:00 - Device used: cuda
+INFO - 02/16/26 20:13:08 - 0:00:07 - Built remoteclip_encoder.
+INFO - 02/16/26 20:13:09 - 0:00:07 - Model Trainable Parameters: 0.101M
+WARNING - 02/16/26 20:13:11 - 0:00:10 - Unsupported operator aten::add encountered 25 time(s)
+WARNING - 02/16/26 20:13:11 - 0:00:10 - Unsupported operator aten::div encountered 12 time(s)
+WARNING - 02/16/26 20:13:11 - 0:00:10 - Unsupported operator aten::unflatten encountered 12 time(s)
+WARNING - 02/16/26 20:13:11 - 0:00:10 - Unsupported operator aten::mul encountered 48 time(s)
+WARNING - 02/16/26 20:13:11 - 0:00:10 - Unsupported operator aten::scaled_dot_product_attention encountered 12 time(s)
+WARNING - 02/16/26 20:13:11 - 0:00:10 - Unsupported operator aten::gelu encountered 12 time(s)
+WARNING - 02/16/26 20:13:11 - 0:00:10 - The following submodules of the model were never called during the trace of the graph. They may be unused, or they were accessed by direct calls to .forward() or via other python methods. In the latter case they will have zeros for statistics, though their statistics will still contribute to their parent calling module.
+                                        encoder.transformer.resblocks.0.attn.out_proj, encoder.transformer.resblocks.1.attn.out_proj, encoder.transformer.resblocks.10.attn.out_proj, encoder.transformer.resblocks.11.attn.out_proj, encoder.transformer.resblocks.2.attn.out_proj, encoder.transformer.resblocks.3.attn.out_proj, encoder.transformer.resblocks.4.attn.out_proj, encoder.transformer.resblocks.5.attn.out_proj, encoder.transformer.resblocks.6.attn.out_proj, encoder.transformer.resblocks.7.attn.out_proj, encoder.transformer.resblocks.8.attn.out_proj, encoder.transformer.resblocks.9.attn.out_proj
+INFO - 02/16/26 20:13:11 - 0:00:10 - Model GMACs: 4.368 (for input size torch.Size([1, 3, 1, 256, 256]))
+/cluster/home/iyakushevsky/euler_env/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+Error executing job with overrides: ['+experiment=test_remoteclip_RSITMD_FT_teacher']
+Error in call to target 'engine.evaluator.LinearClassificationEvaluator':
+KeyError('RANK')
+full_key: task.evaluator
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

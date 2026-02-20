@@ -157,7 +157,7 @@ class LinearClassificationEvaluator(Evaluator):
         super().__init__(val_loader, exp_dir, device, inference_mode, sliding_inference_batch, use_wandb)
         self.multi_label = multi_label
         self.topk = topk
-        self.save_feature_maps = save_feature_maps 
+        self.save_feature_maps = save_feature_maps # why does it save? 
         self.save_path = save_path  
     
     @torch.no_grad()
