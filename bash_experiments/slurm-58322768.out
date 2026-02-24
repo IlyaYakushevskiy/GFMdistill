@@ -1,0 +1,24 @@
+=== Job starting on eu-g3-083 at Tue Feb 24 10:41:24 CET 2026 ===
+=== SLURM_PROCID: 0, SLURM_LOCALID: 0, CUDA_VISIBLE_DEVICES: 0 ===
+Activated Python venv: /cluster/home/iyakushevsky/euler_env/bin/python
+Tue Feb 24 10:41:24 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Quadro RTX 6000                On  |   00000000:01:00.0 Off |                  Off |
+| 33%   30C    P8             12W /  260W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+=== Job finished at Tue Feb 24 10:41:36 CET 2026 ===

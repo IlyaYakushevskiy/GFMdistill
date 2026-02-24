@@ -1,7 +1,7 @@
 from .trainer import Trainer
 import torch
 
-class DistillationTrainer(Trainer):
+class DistillationTrainer(Trainer): ##OR LinearClassificationTrainer to inherit?
     def __init__(self, teacher_model: torch.nn.Module, *args, **kwargs):
         """
         Initializes the DistillationTrainer.

@@ -1,0 +1,30 @@
+=== Job starting on eu-g3-083 at Tue Feb 24 11:10:28 CET 2026 ===
+=== SLURM_PROCID: 0, SLURM_LOCALID: 0, CUDA_VISIBLE_DEVICES: 0 ===
+Activated Python venv: /cluster/home/iyakushevsky/euler_env/bin/python
+Tue Feb 24 11:10:28 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Quadro RTX 6000                On  |   00000000:C2:00.0 Off |                  Off |
+| 33%   30C    P8             15W /  260W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+INFO: Loading RSITMD 'train' split from data/RSITMD/dataset_RSITMD_split.json
+INFO: Loaded 3648 samples for split 'train'.
+INFO: Loading RSITMD 'val' split from data/RSITMD/dataset_RSITMD_split.json
+INFO: Loaded 643 samples for split 'val'.
+INFO: Loading RSITMD 'test' split from data/RSITMD/dataset_RSITMD_split.json
+INFO: Loaded 452 samples for split 'test'.
+=== Job finished at Tue Feb 24 11:15:34 CET 2026 ===

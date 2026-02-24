@@ -146,7 +146,7 @@ def main(cfg: DictConfig) -> None:
     encoder: Encoder = instantiate(cfg.encoder)
     if cfg.encoder.encoder_weights:
         encoder.load_encoder_weights(logger)
-    logger.info("Built {}.".format(encoder.model_name))
+    logger.info("Built {} from weights.".format(encoder.model_name))
 
     # prepare the decoder (segmentation/regression)
     decoder: Decoder = instantiate(
@@ -196,42 +196,70 @@ def main(cfg: DictConfig) -> None:
 
     torch.cuda.empty_cache()
 
-    #training 
+    # training
     if train_run or cfg.task.trainer.model == "knn_probe":
-        train_preprocessor = instantiate(cfg.preprocessing.train, dataset_cfg=cfg.dataset, encoder_cfg=cfg.encoder, _recursive_=False)
-        val_preprocessor = instantiate(cfg.preprocessing.val, dataset_cfg=cfg.dataset, encoder_cfg=cfg.encoder, _recursive_=False)
+        # get preprocessor
+        train_preprocessor = instantiate(
+            cfg.preprocessing.train,
+            dataset_cfg=cfg.dataset,
+            encoder_cfg=cfg.encoder,
+            _recursive_=False,
+        )
+        val_preprocessor = instantiate(
+            cfg.preprocessing.val,
+            dataset_cfg=cfg.dataset,
+            encoder_cfg=cfg.encoder,
+            _recursive_=False,
+        )
 
+        # get datasets
         raw_train_dataset: RawGeoFMDataset = instantiate(cfg.dataset, split="train")
         raw_val_dataset: RawGeoFMDataset = instantiate(cfg.dataset, split="val")
 
         if 0 < cfg.limited_label_train < 1:
-            indices = get_subset_indices(raw_train_dataset, task=task_name, strategy=cfg.limited_label_strategy, label_fraction=cfg.limited_label_train, num_bins=cfg.stratification_bins, logger=logger)
+            indices = get_subset_indices(
+                raw_train_dataset,
+                task=task_name,
+                strategy=cfg.limited_label_strategy,
+                label_fraction=cfg.limited_label_train,
+                num_bins=cfg.stratification_bins,
+                logger=logger,
+            )
             raw_train_dataset = GeoFMSubset(raw_train_dataset, indices)
+
         if 0 < cfg.limited_label_val < 1:
-            indices = get_subset_indices(raw_val_dataset, task=task_name, strategy=cfg.limited_label_strategy, label_fraction=cfg.limited_label_val, num_bins=cfg.stratification_bins, logger=logger)
+            indices = get_subset_indices(
+                raw_val_dataset,
+                task=task_name,
+                strategy=cfg.limited_label_strategy,
+                label_fraction=cfg.limited_label_val,
+                num_bins=cfg.stratification_bins,
+                logger=logger,
+            )
             raw_val_dataset = GeoFMSubset(raw_val_dataset, indices)
 
-        train_dataset = GeoFMDataset(raw_train_dataset, train_preprocessor, cfg.data_replicate)
-        val_dataset = GeoFMDataset(raw_val_dataset, val_preprocessor, cfg.data_replicate)
+        train_dataset = GeoFMDataset(
+            raw_train_dataset, train_preprocessor, cfg.data_replicate
+        )
+        val_dataset = GeoFMDataset(
+            raw_val_dataset, val_preprocessor, cfg.data_replicate
+        )
 
         logger.info("Built {} dataset.".format(cfg.dataset.dataset_name))
-        logger.info(f"Total number of train patches: {len(train_dataset)}\nTotal number of validation patches: {len(val_dataset)}\n")
 
-        # --- CORRECTED: Sampler creation logic ---
-        if is_distributed:
-            train_sampler = DistributedSampler(train_dataset, shuffle=True)
-            val_sampler = DistributedSampler(val_dataset, shuffle=False)
-        else:
-            train_sampler = None
-            val_sampler = None
+        logger.info(
+            f"Total number of train patches: {len(train_dataset)}\n"
+            f"Total number of validation patches: {len(val_dataset)}\n"
+        )
 
+        # get train val data loaders
         train_loader = DataLoader(
             train_dataset,
-            # --- FIX: Pass the sampler object, not a boolean ---
-            sampler=train_sampler,
+            sampler=DistributedSampler(train_dataset),
             batch_size=cfg.batch_size,
             num_workers=cfg.num_workers,
             pin_memory=True,
+            # persistent_workers=True causes memory leak
             persistent_workers=False,
             worker_init_fn=seed_worker,
             generator=get_generator(cfg.seed),
@@ -241,14 +269,13 @@ def main(cfg: DictConfig) -> None:
 
         val_loader = DataLoader(
             val_dataset,
-            sampler=val_sampler,
+            sampler=DistributedSampler(val_dataset),
             batch_size=cfg.test_batch_size,
             num_workers=cfg.test_num_workers,
             pin_memory=True,
             persistent_workers=False,
             worker_init_fn=seed_worker,
-            # --- CORRECTED: `drop_last` should be False for evaluation to test on all data. ---
-            # Your evaluator's `all_reduce` handles cases with uneven batches across GPUs.
+            # generator=g,
             drop_last=False,
             collate_fn=collate_fn,
         )
@@ -261,10 +288,11 @@ def main(cfg: DictConfig) -> None:
             total_iters=len(train_loader) * cfg.task.trainer.n_epochs,
         )
 
-        val_evaluator: Evaluator = instantiate(cfg.task.evaluator, val_loader=val_loader, exp_dir=exp_dir, device=device)
+        val_evaluator: Evaluator = instantiate(
+            cfg.task.evaluator, val_loader=val_loader, exp_dir=exp_dir, device=device
+        )
         trainer: Trainer = instantiate(
             cfg.task.trainer,
-            teacher_model=teacher_model,
             model=decoder,
             train_loader=train_loader,
             lr_scheduler=lr_scheduler,
@@ -274,9 +302,12 @@ def main(cfg: DictConfig) -> None:
             exp_dir=exp_dir,
             device=device,
         )
+        # resume training if model_checkpoint is provided
         if cfg.ckpt_dir is not None:
             trainer.load_model(cfg.ckpt_dir)
-        trainer.train()
+
+        trainer.train() #defined in the engine.Trainer
+
 
     # Evaluation
     test_preprocessor = instantiate(cfg.preprocessing.test, dataset_cfg=cfg.dataset, encoder_cfg=cfg.encoder, _recursive_=False)

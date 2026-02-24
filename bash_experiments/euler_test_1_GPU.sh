@@ -27,6 +27,6 @@ export WORLD_SIZE=$SLURM_NTASKS
 export RANK=$SLURM_PROCID
 export LOCAL_RANK=$SLURM_LOCALID
 
-torchrun --nnodes=1 --nproc_per_node=1 main.py +experiment=test_remoteclip_RSITMD_FT_teacher
+torchrun --nnodes=1 --nproc_per_node=1 main.py +experiment=test_remoteclip_RSITMD_FT_teacher_small
 
 echo "=== Job finished at $(date) ==="

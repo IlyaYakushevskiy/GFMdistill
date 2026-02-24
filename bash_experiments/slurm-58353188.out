@@ -1,0 +1,24 @@
+sc=== Job starting on eu-g3-072 at Tue Feb 24 15:38:14 CET 2026 ===
+=== SLURM_PROCID: 0, SLURM_LOCALID: 0, CUDA_VISIBLE_DEVICES: 0 ===
+Activated Python venv: /cluster/home/iyakushevsky/euler_env/bin/python
+Tue Feb 24 15:38:14 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.16             Driver Version: 580.126.16     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA TITAN RTX               On  |   00000000:21:00.0 Off |                  N/A |
+| 40%   32C    P8              9W /  280W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+INFO: Loading RSITMD 'train' split from data/RSITMD/dataset_RSITMD_split.json
